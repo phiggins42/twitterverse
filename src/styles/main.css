@@ -1,0 +1,59 @@
+
+fieldset {
+	width:300px;
+	float:left;
+	padding:5px;
+	margin-left:4px;
+	position:relative;
+}
+
+fieldset legend { 
+	font-weight:bold;
+	position:relative;
+}
+
+fieldset ul {
+	height:400px;
+	overflow:auto;
+	margin:0; padding:0;
+	list-style:none;
+}
+
+fieldset li {
+	padding:6px;
+	height:75px;
+	margin-bottom:5px;
+	margin-right:5px;
+	border:1px solid #fff;
+}
+
+fieldset li img {
+	width:42px;
+	height:42px;
+	float:left;
+	border:0;
+	padding:2px 6px 6px 0;
+}
+
+fieldset li p {
+	font-size:10pt;
+	margin-top:0;
+}
+
+li.unseen {
+	background-color:#f7f4c6;
+}
+
+.nav {
+	position:absolute;
+	right:25px;
+	top:-22px;
+}
+.icon {
+	display:block;
+	height:16px;
+	width:16px;
+	background:url("images/close.gif") no-repeat center center;
+}
+
+#footer { margin-top:1em; }
