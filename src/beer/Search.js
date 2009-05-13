@@ -12,7 +12,8 @@ dojo.require("dojo.NodeList-fx");
 		count = 0,
 		urlRe = new RegExp("([A-Za-z]+://[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+)","g"),
 		nop = function(){ /* do nothing */ },
-		ping = d.partial(d.publish, "/new/tweets", [])
+		ping = d.partial(d.publish, "/new/tweets", []),
+		cachedTemplate
 	;
 	
 	// exposed so can be used in the formatter function dojo.string.substitute
@@ -59,14 +60,20 @@ dojo.require("dojo.NodeList-fx");
 			this._query = encodeURIComponent(this.query);
 			this._baseInterval = this.interval;
 			
-			dojo.xhrGet({
-				url: d.moduleUrl("beer", "templates/ItemTemplate.html"),
-				load: d.hitch(this, function(data){
-					this.itemTemplate = d.trim(data);
-					this.poll();
-					this.update(); // always do it now
-				})
-			});
+			if(!cachedTemplate){
+				dojo.xhrGet({
+					url: d.moduleUrl("beer", "templates/ItemTemplate.html"),
+					load: d.hitch(this, function(data){
+						cachedTemplate = this.itemTemplate = d.trim(data);
+					}),
+					sync:true
+				});
+			}else{
+				this.itemTemplate = cachedTemplate;
+			}
+
+			this.poll();
+			this.update(); // always do it now
 			
 			this.connect(this.domNode, "onclick", "_onclick");
 			this.connect(this.closeIcon, "onclick", "_onclose");
