@@ -11,7 +11,8 @@ dojo.require("dojo.NodeList-fx");
 	var	urlbase = "http://search.twitter.com/search.json", 
 		count = 0,
 		urlRe = new RegExp("([A-Za-z]+://[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+)","g"),
-		nop = function(){ /* do nothing */ }
+		nop = function(){ /* do nothing */ },
+		ping = d.partial(d.publish, "/new/tweets", [])
 	;
 	
 	// exposed so can be used in the formatter function dojo.string.substitute
@@ -19,7 +20,8 @@ dojo.require("dojo.NodeList-fx");
 		return str
 			// replace direct url's in the tweet
 			.replace(urlRe, function(m){
-				return "<a href='" + m + "' target='_blank'>" + m + "</a>";
+				var ms = m.length > 20 ? m.slice(0, 17) + "..." : m;
+				return "<a href='" + m + "' title='" + m + "' target='_blank'>" + ms + "</a>";
 			})
 			// and replace the @replies and references with links
 			.replace(/@([\w]+)/, function(a,m){
@@ -103,7 +105,7 @@ dojo.require("dojo.NodeList-fx");
 					onEnd: function(n){
 						n.innerHTML = "";
 						d.style(n, "opacity", 1);
-						d.publish("/new/tweets", []);
+						ping();
 					}
 				}).play();
 				
@@ -115,7 +117,10 @@ dojo.require("dojo.NodeList-fx");
 			this.stop();
 			d.fadeOut({ 
 				node: this.domNode, 
-				onEnd: d.hitch(this, "destroy", false)
+				onEnd: d.hitch(this, function(){
+					this.destroy();
+					ping();
+				})
 			}).play();
 		},
 		
@@ -135,7 +140,7 @@ dojo.require("dojo.NodeList-fx");
 			].join("");
 			
 			// fetch:
-			d.addScript(url, function(){}); // null function 
+			d.addScript(url, nop); // null function to allow removeChild(s)
 		},
 		
 		_handle: function(id, response){
@@ -240,7 +245,7 @@ dojo.require("dojo.NodeList-fx");
 			if(l > 200){ this.stop(); }
 			if(l){
 				this.newCount.innerHTML = "(" + l + ")";
-				d.publish("/new/tweets", []);
+				ping();
 			}
 			
 		},

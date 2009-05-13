@@ -16,7 +16,7 @@ dojo.mixin(beer, {
 
 				dojo.forEach(l, function(term){
 					// avoid null queryies
-					if(!term.length){ return };
+					if(!dojo.trim(term).length){ return };
 					
 					// fix "foo or bar" or "foo OR bar", the API doesn't seem to like it (search.twitter.com is fine tho)
 					term = term.replace(/\ or\ /g, "OR");
