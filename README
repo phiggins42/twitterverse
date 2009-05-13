@@ -1,9 +1,22 @@
 twitterverse
 ------------
 
-a simple dojo application.
+A simple/sample Dojo application.
 
 FIXME: 
 	* expand docs
 	* figure out git->svn:externals
 	
+TODO:
+	* Add UI for reply/retweet
+	* Add UI for loading trending topics 
+	* Add UI for help	
+		* search is comma separated
+		* can be any of the standard queries:
+			* something
+			* something OR somethingelse
+			* from:someone
+			* to:someone
+			(and so on)
+	* FIX close icon position
+	* Implement beer.Portal for DnD	

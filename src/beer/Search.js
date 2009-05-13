@@ -24,7 +24,7 @@ dojo.require("dojo.NodeList-fx");
 				return "<a href='" + m + "' title='" + m + "' target='_blank'>" + ms + "</a>";
 			})
 			// and replace the @replies and references with links
-			.replace(/@([\w]+)/, function(a,m){
+			.replace(/@([\w]+)/g, function(a,m){
 				return "<a href='http://twitter.com/" + m + "'>@" + m + "</a>";
 			})
 		;
@@ -46,15 +46,8 @@ dojo.require("dojo.NodeList-fx");
 		// itemTemplate: String
 		//		A template string to use for each Tweet-item. Filtered through dojo.string.substitute
 		//		with each tweet data item as the content.
-		itemTemplate: 
-			"<li class='unseen'>" +
-				"<div>" +
-					"<a target='_blank' href='http://twitter.com/${from_user}'>" +
-						"<img style='float:left' src='${profile_image_url}' />" +
-					"</a><p>${text:beer.replaceLinks}</p>" +
-				"</div>" +
-			"</li>",
-			
+		itemTemplate:"", 
+		
 		// childSelector: String
 		//		A CSS3 query string used to identifiy each child.
 		childSelector: "> li",
@@ -65,8 +58,15 @@ dojo.require("dojo.NodeList-fx");
 			this._seenIds = {};
 			this._query = encodeURIComponent(this.query);
 			this._baseInterval = this.interval;
-			this.poll();
-			this.update(); // always do it now
+			
+			dojo.xhrGet({
+				url: d.moduleUrl("beer", "templates/ItemTemplate.html"),
+				load: d.hitch(this, function(data){
+					this.itemTemplate = d.trim(data);
+					this.poll();
+					this.update(); // always do it now
+				})
+			});
 			
 			this.connect(this.domNode, "onclick", "_onclick");
 			this.connect(this.closeIcon, "onclick", "_onclose");
@@ -204,7 +204,7 @@ dojo.require("dojo.NodeList-fx");
 			 	this.containerNode, 
 				"first"
 			);
-
+			
 			// prepare the node
 			d.style(n, {
 				opacity:0,
