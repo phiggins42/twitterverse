@@ -1,4 +1,6 @@
 body, html {
+	font-family:"Lucida Grande","Trebuchet MS",Verdana,sans-serif;
+	color:#666;
 	margin:0;
 	padding:0;
 	background:#ededed;
@@ -51,17 +53,27 @@ li.unseen {
 
 .nav {
 	position:absolute;
-	right:25px;
-	top:-22px;
+	right:11px;
+	top:-21px;
 }
+
 .icon {
 	display:block;
 	height:16px;
 	width:16px;
-	background:url("images/close.gif") no-repeat center center;
+	background:url("images/spriteRoundedIconsSmall.png") no-repeat -60px 1px;
+	#background-image:url("images/spriteRoundedIconsSmall.gif");
+}
+.icon:hover,
+.icon:focus {
+	outline:none;
+	background-position:-60px -29px;
 }
 
-#footer { padding-top:1em; }
+#footer { 
+	padding-top:1em; 
+	font-size:10px;
+}
 
 #header, #footer {
 	margin:0 auto;
@@ -69,11 +81,11 @@ li.unseen {
 }
 
 .wrapbot {
-	border-bottom:1px solid #666;
+	border-bottom:1px solid #dedede;
 }
 
 .wraptop {
-	border-top:1px solid #666;
+	border-top:1px solid #dedede;
 }
 
 #search { float:right; }
