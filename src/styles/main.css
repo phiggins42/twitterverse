@@ -1,10 +1,15 @@
-
+body, html {
+	margin:0;
+	padding:0;
+	background:#ededed;
+}
 fieldset {
 	width:300px;
 	float:left;
 	padding:5px;
 	margin-left:4px;
 	position:relative;
+	background:#fff;
 }
 
 fieldset legend { 
@@ -13,7 +18,7 @@ fieldset legend {
 }
 
 fieldset ul {
-	height:400px;
+	height:200px;
 	overflow:auto;
 	margin:0; padding:0;
 	list-style:none;
@@ -56,4 +61,25 @@ li.unseen {
 	background:url("images/close.gif") no-repeat center center;
 }
 
-#footer { margin-top:1em; }
+#footer { padding-top:1em; }
+
+#header, #footer {
+	margin:0 auto;
+	width:760px;
+}
+
+.wrapbot {
+	border-bottom:1px solid #666;
+}
+
+.wraptop {
+	border-top:1px solid #666;
+}
+
+#search { float:right; }
+
+#content {
+	padding:1em;
+	background:#fff;
+	clear:both;
+}
