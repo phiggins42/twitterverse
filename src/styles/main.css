@@ -1,3 +1,4 @@
+/* Generic Styles */
 body, html {
 	font-family:"Lucida Grande","Trebuchet MS",Verdana,sans-serif;
 	color:#666;
@@ -5,8 +6,19 @@ body, html {
 	padding:0;
 	background:#ededed;
 }
+
+#header, #footer {
+	margin:0 auto;
+	width:760px;
+}
+
+/* the seperator lines */
+.wrapbot { border-bottom:1px solid #dedede; }
+.wraptop { border-top:1px solid #dedede; }
+
+/* SearchTwitter instances are fieldsets */
 fieldset {
-	width:300px;
+	width:320px;
 	float:left;
 	padding:5px;
 	margin-left:4px;
@@ -20,7 +32,7 @@ fieldset legend {
 }
 
 fieldset ul {
-	height:200px;
+	height:250px;
 	overflow:auto;
 	margin:0; padding:0;
 	list-style:none;
@@ -32,6 +44,7 @@ fieldset li {
 	margin-bottom:5px;
 	margin-right:5px;
 	border:1px solid #fff;
+	border-bottom:1px dotted #ededed;
 }
 
 fieldset li img {
@@ -45,18 +58,22 @@ fieldset li img {
 fieldset li p {
 	font-size:10pt;
 	margin-top:0;
+	margin-bottom:2px;
 }
 
+/* Highlight color for unseen tweets. Animates to #fff */
 li.unseen {
-	background-color:#f7f4c6;
+	background-color:#FEFFCF;
 }
 
+/* FIXME: this is b0rken */ 
 .nav {
 	position:absolute;
 	right:11px;
 	top:-21px;
 }
 
+/* the close icon for each fieldset */
 .icon {
 	display:block;
 	height:16px;
@@ -70,23 +87,12 @@ li.unseen {
 	background-position:-60px -29px;
 }
 
+/* the footer region */
 #footer { 
 	padding-top:1em; 
 	font-size:10px;
 }
 
-#header, #footer {
-	margin:0 auto;
-	width:760px;
-}
-
-.wrapbot {
-	border-bottom:1px solid #dedede;
-}
-
-.wraptop {
-	border-top:1px solid #dedede;
-}
 
 #search { float:right; }
 
@@ -94,4 +100,45 @@ li.unseen {
 	padding:1em;
 	background:#fff;
 	clear:both;
+}
+
+/* the links inside the tweet li */
+.tweetoptions a {
+	font-size:8pt;
+	text-decoration:none;
+	display:block;
+	width:16px;
+	height:16px;
+	text-indent:-999px;
+	background:url("images/spriteRoundedIconsSmall.png") no-repeat -60px 1px;
+	#background-image:url("images/spriteRoundedIconsSmall.gif");
+}
+.tweetoptions a:focus,
+.tweetoptions a:hover {
+	/* don't let me catch you doing this, evar. */
+	outline:none;
+}
+
+/* over is added to li's on hover */
+.over .tweetoptions {
+	#visibility:visible;
+	opacity:0.85;
+}
+
+.tweetoptions {
+	width:20px;
+	float:right;
+	margin-right:-3px;
+	padding-left:3px;
+	#visibility:hidden;
+	opacity:0;
+	text-align:center;
+	-webkit-transition:opacity 0.3s ease-in;
+}
+
+a.replyicon {
+	background:url(images/reply.gif) no-repeat center center;
+}
+a.retweeticon {
+	background:url(images/forward.gif) no-repeat center center;
 }

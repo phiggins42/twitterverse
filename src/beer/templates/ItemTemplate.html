@@ -1,7 +1,11 @@
 <li class='unseen'>
 	<div>
+		<div class="tweetoptions">
+			<a title="Reply" class="replyicon" target="_twitter" href="${replylink}">&nbsp;</a>
+			<a title="Retweet" class="retweeticon" target="_twitter" href="${retweetlink}">&nbsp;</a>
+		</div>
 		<a target='_blank' href='http://twitter.com/${from_user}'>
-			<img style='float:left' src='${profile_image_url}' />
+			<img class='profile' src='${profile_image_url}' />
 		</a>
 		<p>${text:beer.replaceLinks}</p>
 	</div>

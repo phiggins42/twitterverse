@@ -20,11 +20,15 @@ dependencies = {
 
 	// the namespaces we care about:
 	prefixes: [
+
 		// define our non-dojo namespaces:
 		[ "dijit", "../dijit" ],
+		[ "dojox", "../dojox" ],
 		[ "plugd", "../plugd" ],
 		[ "beer", "../beer" ],
+		
 		// so the css get's munged, too:
 		[ "styles", "../styles" ]
+
 	]
-}
+};
