@@ -1,11 +1,12 @@
 dependencies = {
 	
 	// build arguments:
-	stripConsole: "normal",
+	stripConsole: "all",
 	action:"release",
 	version:"1.4.0-dev",
 	optimize:"shrinksafe",
 	cssOptimize:"comments.keepLines",
+	releaseName:"twit",
 	
 	// the "layers"
 	layers: [

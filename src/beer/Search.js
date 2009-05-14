@@ -130,7 +130,7 @@ dojo.require("dojo.NodeList-fx");
 			d.animateProperty({ 
 				node: this.domNode,
 				properties:{
-					width:1, opacity:0
+					width:20, opacity:0
 				},
 				duration:600,
 				onEnd: d.hitch(this, function(){

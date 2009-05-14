@@ -34,7 +34,8 @@ fieldset legend {
 fieldset ul {
 	height:250px;
 	overflow:auto;
-	margin:0; padding:0;
+	margin:0; 
+	padding:0;
 	list-style:none;
 }
 
@@ -56,7 +57,7 @@ fieldset li img {
 }
 
 fieldset li p {
-	font-size:10pt;
+	font-size:9pt;
 	margin-top:0;
 	margin-bottom:2px;
 }
@@ -129,10 +130,11 @@ li.unseen {
 	width:20px;
 	float:right;
 	margin-right:-3px;
-	padding-left:3px;
+	padding:3px 0 5px 3px;
 	#visibility:hidden;
 	opacity:0;
 	text-align:center;
+	-moz-transition:opacity 0.3s ease-in;
 	-webkit-transition:opacity 0.3s ease-in;
 }
 
