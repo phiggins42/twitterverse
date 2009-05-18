@@ -17,9 +17,11 @@ TODO:
 			* something OR somethingelse
 			* from:someone
 			* to:someone
+			* public:[username] for auth'd public timeline
 			(and so on)
 	* Implement beer.Portal for DnD	
 	* Add "more" to bottom of search and maintain page
 	* use cookies to store queries
-	* add UI for trending topics
-	
+	* Implement RT removal in search. 
+		* global or per instance?
+		* per instance: settings per search box in UI?
