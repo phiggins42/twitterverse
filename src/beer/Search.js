@@ -66,11 +66,9 @@ dojo.require("dojo.NodeList-fx");
 		//		with each tweet data item as the content.
 		itemTemplate:"", 
 
-/*	FIXME: implement	
 		// showRT: Boolean
 		//		Filter out Tweets starting with "RT" if set false.
 		showRT: false, 
-*/
 		
 		// childSelector: String
 		//		A CSS3 query string used to identifiy each child.
@@ -198,7 +196,15 @@ dojo.require("dojo.NodeList-fx");
 				this.poll();
 			}else{
 				// we have new results, add each of them:
-				d.forEach(response.results, this._addItem, this);
+				
+				d.forEach(this.showRT ? 
+					// just pass the array
+					response.results : 
+					// else pass a filtered array omiting "RT" things 
+					d.filter(response.results, function(item){
+						return !(/^RT/.test(item.text));
+					}),
+				this._addItem, this);
 
 				// update the ui
 				this._addToCount(response.results.length);
