@@ -246,7 +246,7 @@ dojo.require("dojo.NodeList-fx");
 			});
 			
 			// setup some events for hoverstates:
-			dojo.query(n).hoverClass("over");
+			d.query(n).hoverClass("over");
 			
 			// animate the node in. We're keeping track of all relevant running animations so we 
 			// can be sure they aren't _all_ trying to wipein at once. This staggers them all,

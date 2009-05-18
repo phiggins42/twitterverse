@@ -6,9 +6,9 @@ A simple/sample Dojo application.
 FIXME: 
 	* expand docs
 	* figure out git->svn:externals
+	* close icon position, styles
 	
 TODO:
-	* Add UI for reply/retweet
 	* Add UI for loading trending topics 
 	* Add UI for help	
 		* search is comma separated
@@ -18,5 +18,8 @@ TODO:
 			* from:someone
 			* to:someone
 			(and so on)
-	* FIX close icon position
 	* Implement beer.Portal for DnD	
+	* Add "more" to bottom of search and maintain page
+	* use cookies to store queries
+	* add UI for trending topics
+	
