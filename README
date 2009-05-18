@@ -7,6 +7,7 @@ FIXME:
 	* expand docs
 	* figure out git->svn:externals
 	* close icon position, styles
+	* PublicTimeline reply username and id are wrong
 	
 TODO:
 	* Add UI for loading trending topics 
@@ -22,6 +23,6 @@ TODO:
 	* Implement beer.Portal for DnD	
 	* Add "more" to bottom of search and maintain page
 	* use cookies to store queries
-	* Implement RT removal in search. 
-		* global or per instance?
-		* per instance: settings per search box in UI?
+	* <strike>Implement RT removal in search.</strike>
+		* per instance
+			* settings per search box in UI?
