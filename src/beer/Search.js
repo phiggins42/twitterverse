@@ -31,6 +31,11 @@ dojo.require("dojo.NodeList-fx");
 		;
 	}
 	
+	beer.fixurl = function(str){
+		// summary: Fix up a URL so that it may be passed to twitter.com/?status=
+		return encodeURI(str);
+	}
+	
 	d.declare("beer.SearchTwitter", [dijit._Widget, dijit._Templated], {
 		// summary: A Search box instance. 
 		
@@ -122,13 +127,17 @@ dojo.require("dojo.NodeList-fx");
 		_onclose: function(e){
 			// summary: Handle clicks for the close icon
 			this.stop();
-			d.fadeOut({ 
-				node: this.domNode, 
+			d.animateProperty({ 
+				node: this.domNode,
+				properties:{
+					width:20, opacity:0
+				},
+				duration:600,
 				onEnd: d.hitch(this, function(){
 					this.destroy();
 					ping();
 				})
-			}).play();
+			}).play(15);
 		},
 		
 		update: function(){
@@ -205,6 +214,23 @@ dojo.require("dojo.NodeList-fx");
 			}
 			this._seenIds[data.id] = true; 
 			
+			// so not sure this is the right way to do this:
+			// encode the retweet and reply strings now:
+			var t = "http://twitter.com/home?status=";
+			d.mixin(data, {
+
+				retweetlink: [
+					t, "RT @", data.from_user, " ", encodeURIComponent(data.text)
+				].join("").replace(/%20/, " ").replace(/\ /g, "+"),
+
+				replylink: [
+					t, "@", data.from_user, " ",
+					"&amp;in_reply_to_status_id=", data.id,
+					"&amp;in_reply_to=", data.from_user
+				].join("").replace(/\ /g, "+")
+
+			});
+			
 			// create the markup from the itemTemplate and data
 			var n = d.place(
 				d.string.substitute(this.itemTemplate, data),
@@ -219,15 +245,22 @@ dojo.require("dojo.NodeList-fx");
 				overflow:"hidden"
 			});
 			
+			// setup some events for hoverstates:
+			d.query(n).hoverClass("over");
+			
 			// animate the node in. We're keeping track of all relevant running animations so we 
 			// can be sure they aren't _all_ trying to wipein at once. This staggers them all,
 			// and pops itself off when complete to decrement the delay
 			var all = beer.SearchTwitter.anims;
 			var a = d.fx.combine([
 				d.fx.wipeIn({ duration:500, node: n }),
-				d.fadeIn({ node: n, duration:700, onEnd: function(){
-					setTimeout(function(){ all.pop(); }, 10);
-				} })
+				d.fadeIn({ 
+					node: n, 
+					duration:700, 
+					onEnd: function(){
+						setTimeout(function(){ all.pop(); }, 10);
+					} 
+				})
 			]);
 			all.push(1);
 			
