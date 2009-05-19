@@ -57,7 +57,7 @@ dojo.require("dojo.NodeList-fx");
 		
 		// query: String
 		//		A default search string to use. Override for each instance
-		query:"#dojo",
+		query:"#dojo OR #dojobeer",
 		
 		templatePath: dojo.moduleUrl("beer", "templates/Twitter.html"),
 		
@@ -74,6 +74,17 @@ dojo.require("dojo.NodeList-fx");
 		//		A CSS3 query string used to identifiy each child.
 		childSelector: "> li",
 
+		// auth: Boolean
+		//		Trigger to let outside things know this box is "special" 
+		//		and may popup a prompt()
+		auth: false,
+		
+		// maxId: Integer
+		//		Optional max_id to start with (for instance from loading sets)
+		//		defaults to a falsy "0", and is populated after determining
+		//		the highest seen id.
+		maxId: 0,
+		
 		postCreate: function(){
 
 			this._seenIds = {};
@@ -289,6 +300,7 @@ dojo.require("dojo.NodeList-fx");
 			]);
 			all.push(1);
 			
+			ping();
 			// play the animation
 			a.play(50 * all.length);
 		},
