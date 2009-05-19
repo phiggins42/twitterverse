@@ -391,6 +391,7 @@ dojo.require("dojo.NodeList-fx");
 				}
 			}
 			
+			ping();
 			// erase our callback ref for memory
 			delete beer.SearchTwitter.__cb[id];
 		},
