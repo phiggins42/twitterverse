@@ -1,12 +1,13 @@
 <li class='unseen'>
-	<div>
-		<div class="tweetoptions">
-			<a title="Reply" class="replyicon" target="_twitter" href="${replylink}">&nbsp;</a>
-			<a title="Retweet" class="retweeticon" target="_twitter" href="${retweetlink}">&nbsp;</a>
-		</div>
-		<a target='_blank' href='http://twitter.com/${user.screen_name}'>
-			<img title="${user.name} (${user.screen_name})" class='profile' src='${user.profile_image_url}' />
-		</a>
-		<p>${text:beer.replaceLinks}</p>
+	<div class="options">
+		<a title="Reply" class="replyicon" target="_twitter" href="${replylink}">Reply</a>
+		<a title="Retweet" class="retweeticon" target="_twitter" href="${retweetlink}">Retweet</a>
 	</div>
+	<p>
+		<a target='_blank' href='http://twitter.com/${user.screen_name}'>
+			<img title="${user.name} (${user.screen_name})" class='profile' 
+				src='${user.profile_image_url}' />
+		</a>
+		${text:beer.replaceLinks}
+	</p>
 </li>
