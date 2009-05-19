@@ -14,11 +14,11 @@
 
 .dijitMenuBar ul li a {
 	padding:2px 11px 2px 9px;
-	z-index:48;
+	z-index:999;
 }
 .dijitMenuBar ul li a:hover {
 	color:#000;
-	z-index:48;
+	z-index:999;
 }
 
 .dijitMenuBar li {
@@ -36,6 +36,7 @@
 .dijitMenuBar a { display:block; }
 .dijitMenuBar li ul li a {
 	/* i don't like this important, but being lazy */
+	background-color:#ededed;
 	color:#333 !important;
 	position:relative;
 	padding:1px 9px 1px 19px;

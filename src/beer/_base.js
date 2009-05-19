@@ -19,26 +19,13 @@ dojo.mixin(beer, {
 	// bootstrap code:
 	init: function(){
 		
-		dojo.query("#menu").menu();
-		
+		this.initMenu();
+				
 		// listen for key presses in the main listen, and focus on page load
 		dojo.query("#q").onkeypress(this, "_inputListener").forEach(function(n){
 			setTimeout(function(){ n.focus(); }, 75);
 		});
-		
-		// wireup up the 'mark all read' link
-		dojo.query("#markall").onclick(this, function(e){
-			e.preventDefault();
-			this._getSearches().forEach(function(w){
-				// yay plugd, no need to dig up which function is reacting to
-				// onclick, just trigger a fake event from the widget node
-				dojo.trigger(w.domNode, "onclick");
-			});
-		});
-
-		// wire up the 'save set' link
-		dojo.query("#saveset").onclick(this, "addSet");
-		
+				
 		// listen for the search boxes telling us there are new items
 		dojo.subscribe("/new/tweets", this, "setTitle");
 		
@@ -64,6 +51,13 @@ dojo.mixin(beer, {
 			}
 		});
 		console.log('should set cookie for:', state);
+		var setname = state.length ? prompt("Name this set:") : false;
+		var sets = [];
+
+		if(setname && dojo.indexOf(sets, setname) >= 0){
+		}else{
+			dojo.publish("/system/warning", ["Need to select a unique name for your set"]);
+		}
 	},
 	
 	loadSet: function(byName){
@@ -150,7 +144,75 @@ dojo.mixin(beer, {
 				}
 			});
 		}
-	}
+	},
+	
+	initMenu: function(){
+		// handle all the menu stuff. perhaps move into menu.js by itself
+		
+		this.trendNode = dojo.query(dojo.create("ul"))
+			.place("#trendingMenu", "after")
+			.onclick(this, function(e){
+				e.preventDefault();
+				this._addQuery(e.target.innerHTML);
+			})
+		;
+		
+		this.loadTrends();
+		
+		// setup the behavior
+		dojo.query("#menu").menu();
+		
+		// wire up known clicks, grab trends
+		// wireup up the 'mark all read' link
+
+		dojo.query("#markall").onclick(this, function(e){
+			e.preventDefault();
+			this._getSearches().forEach(function(w){
+				// yay plugd, no need to dig up which function is reacting to
+				// onclick, just trigger a fake event from the widget node
+				// FIXME: should move to w.markAsRead() or similar
+				dojo.trigger(w.domNode, "onclick");
+			});
+		});
+
+		// wire up the 'save set' link
+		dojo.query("#saveset").onclick(this, "addSet");
+				
+	},
+	
+	_cbCount: 0,
+	getJsonp: function(url, callback){
+		// extension to plugd's addScript to replace callback=? with a generated 
+		// callback member, and delete it. 
+		
+		var id = "_cbk" + (beer._cbCount++);
+		beer[id] = callback;
+
+		url = url.replace(/callback=\?/, "callback=beer." + id + "");
+		
+		dojo.addScript(url, function(){
+			delete beer[id];
+		});
+		
+	},
+	
+	loadTrends: function(){
+		// summary: load the trends for the menu
+		
+		this.getJsonp(
+			"http://search.twitter.com/trends/current.json?callback=?", 
+			dojo.hitch(this, function(response){
+				this.trendNode.empty();
+				for(var i in response.trends){
+					dojo.forEach(response.trends[i], function(trend){
+						dojo.place("<li><a href='#' rel='" + trend.query + "'>" + trend.name + "</a></li>", this.trendNode[0]);
+					}, this);
+				}
+				
+			})
+		);
+		
+	},
 	
 	// hack: experimental moveable
 	

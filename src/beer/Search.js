@@ -170,23 +170,19 @@ dojo.require("dojo.NodeList-fx");
 		update: function(){
 			// summary: Trigger a new fetch for more data.
 			
-			// setup the jsonp callback:
-			var id = "cb" + (count++);
-			beer.SearchTwitter.__cb[id] = d.hitch(this, "_handle", id);
-			
 			// generate a url
 			var url = [
 				urlbase, "?",
 				"q=", this._query,
 				this.maxId ? "&since_id=" + this.maxId : "",
-				"&callback=beer.SearchTwitter.__cb.", id
+				"&callback=?"
 			].join("");
 			
 			// fetch:
-			d.addScript(url, nop); // null function to allow removeChild(s)
+			beer.getJsonp(url, d.hitch(this, "_handle"));
 		},
 		
-		_handle: function(id, response){
+		_handle: function(response){
 			// summary: Handle the incoming data for this request.
 			
 			this._items = this.children();
@@ -228,8 +224,6 @@ dojo.require("dojo.NodeList-fx");
 			}
 			
 			ping();
-			// erase our callback ref for memory
-			delete beer.SearchTwitter.__cb[id];
 		},
 		
 		poll: function(){
@@ -336,8 +330,6 @@ dojo.require("dojo.NodeList-fx");
 	
 	// mix some properties onto the beer.SearchTwitter function (NOT the .protytpe). These are shared.
 	d.mixin(beer.SearchTwitter, {
-		// stub for callbacks to keep them namespaced nicely
-		__cb:{},
 		// all global animations for all instances:
 		anims:[]
 	})
@@ -352,26 +344,21 @@ dojo.require("dojo.NodeList-fx");
 			// summary: Trigger a new fetch for more data.
 			
 			// setup the jsonp callback:
-			var id = "cb" + (count++),
-				// wait, this does the auth'd user despite the id="username" ?
-				urlbase = "http://twitter.com/statuses/friends_timeline.json"
-			;
-			
-			beer.SearchTwitter.__cb[id] = d.hitch(this, "_handle", id);
+			var urlbase = "http://twitter.com/statuses/friends_timeline.json";
 			
 			// generate a url
 			var url = [
 				urlbase, "?",
 				"id=", this._query,
 				this.maxId ? "&since_id=" + this.maxId : "",
-				"&callback=beer.SearchTwitter.__cb.", id
+				"&callback=?"
 			].join("");
 			
 			// fetch:
-			d.addScript(url, nop); // null function to allow removeChild(s)
+			beer.getJsonp(url, d.hitch(this, "_handle"));
 		},
 		
-		_handle: function(id, response){
+		_handle: function(response){
 			// summary: Handle the incoming data for this request.
 			
 			this._items = this.children();
@@ -405,8 +392,6 @@ dojo.require("dojo.NodeList-fx");
 			}
 			
 			ping();
-			// erase our callback ref for memory
-			delete beer.SearchTwitter.__cb[id];
 		},
 		
 		_addItem: function(data){
