@@ -1,5 +1,6 @@
-src/dijit/*
-src/dojo/*
-src/plugd/*
-src/release/*
-src/util/*
+src/dijit
+src/dojo
+src/dojox
+src/release
+src/util
+src/plugd
