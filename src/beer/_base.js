@@ -146,7 +146,7 @@ dojo.mixin(beer, {
 				}
 			});
 		}
-	},
+	}
 	
 	// hack: experimental moveable
 	
