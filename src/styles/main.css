@@ -20,7 +20,7 @@ h1, h2 {
 
 #search { 
 	float:left;
-	margin:5px 20px 0 20px;
+	margin:5px 20px 0 50px;
 }
 
 #search input {
@@ -36,23 +36,37 @@ h1, h2 {
 }
 
 /* the seperator lines */
-.wrapbot { 
+.wraptop { 
 	padding:1em 0;
 	background:url('/src/styles/images/bg_header.png') 0 50% repeat-x #205bd4;
 	color:#fff;
 	overflow:hidden;
 }
 
-.wrapbot h1, .wrapbot label {
-	#font-weight:bold;
-}
-
-.wrapbot h1 {
+.wraptop h1 {
 	float:left;
 }
 
-.wraptop { 
+.wrapbot { 
 	border-top:1px solid #dedede; 
+}
+
+#menu {
+	clear:both;
+	list-style:none;
+	overflow:hidden;
+	margin:0 1.2em;
+	padding:0;
+	font-size:80%;
+}
+
+#menu li {
+	float:left;
+	margin:0 10px 0 0;
+}
+
+#menu a {
+	color:#fff;
 }
 
 /* SearchTwitter instances are fieldsets */
