@@ -59,6 +59,7 @@ h1, h2 {
 div.results {
 	width:320px;
 	float:left;
+	margin:0 10px 10px 0;
 	margin-left:4px;
 	position:relative;
 	border:1px solid #dde;
