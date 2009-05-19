@@ -9,8 +9,9 @@ dojo.require("plugd.base"); // fun code
 dojo.require("plugd.script"); // more fun
 dojo.require("dojox.analytics.Urchin");
 
-// load out module code
+// load our module code
 dojo.require("beer.Search"); // our SearchBoxThinger
+dojo.require("beer.Config"); // our config singleton
 
 dojo.mixin(beer, {
 	
@@ -123,7 +124,7 @@ dojo.mixin(beer, {
 		
 		var sum = 0;
 		// find all instances, and cumulatively increment the total
-		dijit.registry.byClass("beer.SearchTwitter").forEach(function(w){
+		beer._getSearches().forEach(function(w){
 			var n = w.newCount.innerHTML.match(/\d+/); // get the value
 			n = n ? +n[0] : 0; // make sure it exsits and is a value
 			sum += n; // add it
@@ -145,7 +146,9 @@ dojo.mixin(beer, {
 				}
 			});
 		}
-	}
+	},
+	
+	// hack: experimental moveable
 	
 });
 
