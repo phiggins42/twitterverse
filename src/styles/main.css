@@ -56,7 +56,8 @@ h1, h2 {
 
 #menu {
 	clear:both;
-	margin:0 auto;
+	padding:4px;
+	margin-left:6px;
 }
 
 /*
@@ -74,7 +75,8 @@ h1, h2 {
 */
 
 #menu a {
-	color:#fff;
+	color:#000;
+	text-decoration:none;
 }
 
 /* SearchTwitter instances are divs */

@@ -46,21 +46,43 @@ dojo.mixin(beer, {
 		// summary: // only in dojo trunk, this is all false otherwise add the current selected view as a cookie
 		e && e.preventDefault(); // safey first
 		var state = this._getSearches().map(function(w){
-			return {
+			return dojo.objectToQuery({
 				q: w.query, a: w.auth, id: w.maxId
-			}
+			})
 		});
+
 		console.log('should set cookie for:', state);
 		var setname = state.length ? prompt("Name this set:") : false;
 		var sets = [];
 
-		if(setname && dojo.indexOf(sets, setname) >= 0){
+		if(setname && dojo.indexOf(sets, setname) < 0){
+			beer._addSetName(setname, state);
 		}else{
 			dojo.publish("/system/warning", ["Need to select a unique name for your set"]);
 		}
 	},
 	
-	loadSet: function(byName){
+	_addSetName: function(name, state){
+		var sets = dojo.queryToObejec(dojo.cookie("tvsets"));
+		var obj = {};
+		obj[name] = state;
+		dojo.cookie("tvsets", dojo.mixin(sets||{}, obj));
+	},
+	
+	loadSets: function(){
+		// load all the sets stored in a cookie (possibly unset) into the 'sets' ul
+		// listen for onlick on the ul, and add a set of searches based on the cookie data
+		var sets = dojo.cookie("tvsets");
+		if(sets){
+			console.log(sets);
+		}
+	},
+	
+	_loadSet: function(byName){
+		var setdata = dojo.cookie("tvsets");
+		if(setData[byName]){
+			console.log(setData[byName]);
+		}
 		// hmmmmmmm
 	},
 	
@@ -158,6 +180,7 @@ dojo.mixin(beer, {
 		;
 		
 		this.loadTrends();
+		this.loadSets();
 		
 		// setup the behavior
 		dojo.query("#menu").menu();

@@ -1,4 +1,5 @@
 dojo.provide("beer.menu");
+dojo.require("plugd.base");
 (function(d){
 	
 	d.extend(d.NodeList, {
@@ -8,7 +9,9 @@ dojo.provide("beer.menu");
 				d.addClass(n, "dijitMenuBar");
 				
 				// top level menu items:
-				var tl = d.query("> ul > li", n);
+				var tl = d.query("> ul > li", n)
+					// make it easier to style:
+					.hoverClass("selected");
 				
 				// setup behavior all all items:
 				d.query("ul > li", n)

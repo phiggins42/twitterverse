@@ -13,6 +13,7 @@
 }
 
 .dijitMenuBar ul li a {
+	color:#000;
 	padding:2px 11px 2px 9px;
 	z-index:999;
 }
@@ -35,17 +36,29 @@
 
 .dijitMenuBar a { display:block; }
 .dijitMenuBar li ul li a {
-	/* i don't like this important, but being lazy */
-	background-color:#ededed;
-	color:#333 !important;
+	background-color:#fff;
+	color:#000;
 	position:relative;
 	padding:1px 9px 1px 19px;
 	width:130px;
 }
 .dijitMenuBar li ul li a:hover {
-	background:#ccc;
+	background:#fff;
 	/* this one either. */
-	color:#000 !important;
+	color:#000;
+}
+
+.dijitMenuBar ul li.selected a {
+	background:#666;
+	color:#fff;
+}
+.dijitMenuBar ul li.selected ul li a {
+	background:#fff;
+	color:#666;
+}
+.dijitMenuBar ul li.selected ul li a:hover {
+	color:#000;
+	background:#666;
 }
 
 .dijitMenuBar li ul ul {

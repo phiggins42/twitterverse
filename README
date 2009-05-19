@@ -3,10 +3,27 @@ twitterverse
 
 A simple/sample Dojo application.
 
+Install
+-------
+
+To fetch Dojo and all required plugins, run getdojo.sh in src/
+To run a build and update Dojo, run build.sh in src/
+	* Adjust the path to dojo.js and main.css in index after build. 
+		- New dojo.js is located in src/release/twit/dojo/dojo.js
+		- New main.css is located in src/release/twit/styles/main.css 
+
+Updates
+-------
+
+If a new plugin from dojox (or any other external dependency) is added, you must run 
+getdojo.sh to update changes. 
+
+If your index.html is pointing to a built dojo.js (/release/twit/) you must re-run build.sh 
+to "compile" the changes after every update.
+
 FIXME: 
-	* expand docs
 	* figure out git->svn:externals
-	* close icon position, styles
+	* styles, menu paddings/colors/margins
 	
 TODO:
 	* Add UI for loading trending topics 
@@ -24,8 +41,7 @@ TODO:
 	* <strike>Implement RT removal in search.</strike>
 		* per instance
 			* settings per search box in UI?
-	* Trending terms
-	* use cookies to store queries (ala history in search box or:)
+	* use cookies to store queries (ala history in search box or: ?)
 	* Save search set 
 		* do we want named saves? eg: "ajax news" has 
 		  queries for "dojo OR dojobeer, mootools, ajaxian"
