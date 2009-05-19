@@ -192,3 +192,20 @@ a.replyicon {
 a.retweeticon {
 	background:url(images/forward.gif) no-repeat center center;
 }
+
+#config {
+	height:0;
+	overflow:hidden;
+	position:absolute;
+	top:0;
+	right:50px;
+	margin:0;
+	padding:0;
+	background:#000;
+	color:#fff;
+	font-size:10pt;
+	line-height:1em;
+}
+#config div {
+	padding:8px;
+}
