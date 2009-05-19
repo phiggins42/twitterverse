@@ -12,11 +12,14 @@ dojo.require("dojox.analytics.Urchin");
 // load our module code
 dojo.require("beer.Search"); // our SearchBoxThinger
 dojo.require("beer.Config"); // our config singleton
+dojo.require("beer.menu");
 
 dojo.mixin(beer, {
 	
 	// bootstrap code:
 	init: function(){
+		
+		dojo.query("#menu").menu();
 		
 		// listen for key presses in the main listen, and focus on page load
 		dojo.query("#q").onkeypress(this, "_inputListener").forEach(function(n){
@@ -70,14 +73,15 @@ dojo.mixin(beer, {
 	_inputListener: function(e){
 		// summary: I'm probably attached to the main input on the page. 
 		
-		var input = dojo.byId("q");
 		if(e.charOrCode == dojo.keys.ENTER){
-			this._addSearches(input);
+			this._addSearches("q");
 		}
 	},
 	
-	_addSearches: function(input){
+	_addSearches: function(/* String|DomNode */input){
 		// break the input into comma seprated values, or one if lacking comma
+
+		input = dojo.byId(input);
 		var l = dojo.indexOf(input.value, ",") >= 0 
 			? input.value.split(",") : [input.value];
 
