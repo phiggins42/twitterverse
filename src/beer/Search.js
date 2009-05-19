@@ -116,7 +116,9 @@ dojo.require("dojo.NodeList-fx");
 					// animate them instead
 					l.animateProperty({
 						properties: {
-							backgroundColor:"#fff"
+							color:"#888",
+							backgroundColor:"#fff",
+							borderColor:"#a6cddd"
 						},
 						// then set the 'seen' state
 						onEnd: function(){ 

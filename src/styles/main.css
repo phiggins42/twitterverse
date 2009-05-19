@@ -1,54 +1,125 @@
 /* Generic Styles */
 body, html {
 	font-family:"Lucida Grande","Trebuchet MS",Verdana,sans-serif;
-	color:#666;
+	color:#333;
 	margin:0;
 	padding:0;
 	background:#ededed;
+	font-size:100%;
+}
+
+h1, h2 {
+	font-weight:normal;
+	margin:0;
+	padding:0;
 }
 
 #header, #footer {
-	margin:0 auto;
-	width:760px;
+	margin:0 1em;
+}
+
+#search { 
+	float:left;
+	margin:5px 20px 0 20px;
+}
+
+#search input {
+	border:0;
+	padding:5px;
+	font-size:120%;
+}
+
+#content {
+	padding:1em;
+	background:#fff;
+	clear:both;
 }
 
 /* the seperator lines */
-.wrapbot { border-bottom:1px solid #dedede; }
-.wraptop { border-top:1px solid #dedede; }
+.wrapbot { 
+	padding:1em 0;
+	background-color:#b6edfd;
+	#background:url('/src/styles/images/bg_header.png') 0 50% repeat-x #b6dded;
+	color:#333;
+	overflow:hidden;
+}
+
+.wrapbot h1, .wrapbot label {
+	#font-weight:bold;
+}
+
+.wrapbot h1 {
+	float:left;
+}
+
+.wraptop { 
+	border-top:1px solid #dedede; 
+}
 
 /* SearchTwitter instances are fieldsets */
-fieldset {
+div.results {
 	width:320px;
 	float:left;
-	padding:5px;
 	margin-left:4px;
 	position:relative;
-	background:#fff;
+	border:1px solid #b6edfd;
+	background-color:#fafafa;
+	-webkit-border-radius:7px;
+	-moz-border-radius:7px;
 }
 
-fieldset legend { 
-	font-weight:bold;
+div.results h2 { 
+	font-size:100%;
+	padding:5px;
+	margin:0 0 5px 0;
 	position:relative;
+	color:#333;
 }
 
-fieldset ul {
+.nav {
+	position:absolute;
+	right:5px;
+	top:6px;
+}
+
+/* the close icon for each fieldset */
+div.results h2 .icon {
+	display:block;
+	height:16px;
+	width:16px;
+	background:url("images/spriteRoundedIconsSmall.png") no-repeat -60px 1px;
+}
+
+div.results h2 .icon:hover,
+div.results h2 .icon:focus {
+	outline:none;
+	background-position:-60px -29px;
+}
+
+div.results ul {
 	height:250px;
 	overflow:auto;
-	margin:0; 
+	margin:5px; 
 	padding:0;
 	list-style:none;
 }
 
-fieldset li {
-	padding:6px;
+div.results li {
+	padding:5px 0 5px 5px;
 	height:75px;
-	margin-bottom:5px;
-	margin-right:5px;
-	border:1px solid #fff;
-	border-bottom:1px dotted #ededed;
+	margin:0 5px 5px 0;
+	border:1px solid #a6cddd;
+	-webkit-border-radius:5px;
+	-moz-border-radius:5px;
 }
 
-fieldset li img {
+div.results li.unseen {
+	color:#333;
+	background:#b6edfd;
+	border:1px solid #a6cddd;
+}
+
+div.results li img {
 	width:42px;
 	height:42px;
 	float:left;
@@ -56,36 +127,10 @@ fieldset li img {
 	padding:2px 6px 6px 0;
 }
 
-fieldset li p {
+div.results li p {
 	font-size:9pt;
 	margin-top:0;
 	margin-bottom:2px;
-}
-
-/* Highlight color for unseen tweets. Animates to #fff */
-li.unseen {
-	background-color:#FEFFCF;
-}
-
-/* FIXME: this is b0rken */ 
-.nav {
-	position:absolute;
-	right:11px;
-	top:-21px;
-}
-
-/* the close icon for each fieldset */
-.icon {
-	display:block;
-	height:16px;
-	width:16px;
-	background:url("images/spriteRoundedIconsSmall.png") no-repeat -60px 1px;
-	#background-image:url("images/spriteRoundedIconsSmall.gif");
-}
-.icon:hover,
-.icon:focus {
-	outline:none;
-	background-position:-60px -29px;
 }
 
 /* the footer region */
@@ -94,17 +139,25 @@ li.unseen {
 	font-size:10px;
 }
 
-
-#search { float:right; }
-
-#content {
-	padding:1em;
-	background:#fff;
-	clear:both;
+/* reply, retween icons */
+.options {
+	width:20px;
+	height:55px;
+	padding:3px 5px 3px 3px;
+	float:right;
+	#visibility:hidden;
+	opacity:0;
+	text-align:center;
+	-moz-transition:opacity 0.3s ease-in;
+	-webkit-transition:opacity 0.3s ease-in;
 }
 
-/* the links inside the tweet li */
-.tweetoptions a {
+.over .options {
+	#visibility:visible;
+	opacity:0.85;
+}
+
+.options a {
 	font-size:8pt;
 	text-decoration:none;
 	display:block;
@@ -114,32 +167,16 @@ li.unseen {
 	background:url("images/spriteRoundedIconsSmall.png") no-repeat -60px 1px;
 	#background-image:url("images/spriteRoundedIconsSmall.gif");
 }
-.tweetoptions a:focus,
-.tweetoptions a:hover {
+
+.options a:focus,
+.options a:hover {
 	/* don't let me catch you doing this, evar. */
 	outline:none;
 }
 
-/* over is added to li's on hover */
-.over .tweetoptions {
-	#visibility:visible;
-	opacity:0.85;
-}
-
-.tweetoptions {
-	width:20px;
-	float:right;
-	margin-right:-3px;
-	padding:3px 0 5px 3px;
-	#visibility:hidden;
-	opacity:0;
-	text-align:center;
-	-moz-transition:opacity 0.3s ease-in;
-	-webkit-transition:opacity 0.3s ease-in;
-}
-
 a.replyicon {
 	background:url(images/reply.gif) no-repeat center center;
+	margin:0 0 10px 0;
 }
 a.retweeticon {
 	background:url(images/forward.gif) no-repeat center center;
