@@ -116,7 +116,8 @@ dojo.require("dojo.NodeList-fx");
 					// animate them instead
 					l.animateProperty({
 						properties: {
-							backgroundColor:"#fff"
+							color:"#999",
+							backgroundColor:"#e6eeff"
 						},
 						// then set the 'seen' state
 						onEnd: function(){ 
@@ -403,7 +404,7 @@ dojo.require("dojo.NodeList-fx");
 				return; // no duplicates please.
 			}
 			this._seenIds[data.id] = true; 
-
+			console.log(data);
 			// so not sure this is the right way to do this:
 			// encode the retweet and reply strings now:
 			var t = "http://twitter.com/home?status=";

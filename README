@@ -25,3 +25,7 @@ TODO:
 	* <strike>Implement RT removal in search.</strike>
 		* per instance
 			* settings per search box in UI?
+	* Trending terms
+	* Save search set 
+	* Mark all results as read
+	* Focus search field on load
