@@ -38,9 +38,8 @@ h1, h2 {
 /* the seperator lines */
 .wrapbot { 
 	padding:1em 0;
-	background-color:#b6edfd;
-	#background:url('/src/styles/images/bg_header.png') 0 50% repeat-x #b6dded;
-	color:#333;
+	background:url('/src/styles/images/bg_header.png') 0 50% repeat-x #205bd4;
+	color:#fff;
 	overflow:hidden;
 }
 
@@ -62,8 +61,7 @@ div.results {
 	float:left;
 	margin-left:4px;
 	position:relative;
-	border:1px solid #b6edfd;
-	background-color:#fafafa;
+	border:1px solid #dde;
 	-webkit-border-radius:7px;
 	-moz-border-radius:7px;
 }
@@ -108,15 +106,13 @@ div.results li {
 	padding:5px 0 5px 5px;
 	height:75px;
 	margin:0 5px 5px 0;
-	border:1px solid #a6cddd;
 	-webkit-border-radius:5px;
 	-moz-border-radius:5px;
 }
 
 div.results li.unseen {
 	color:#333;
-	background:#b6edfd;
-	border:1px solid #a6cddd;
+	background:#c7d9ff;
 }
 
 div.results li img {
