@@ -41,7 +41,7 @@ h1, h2 {
 /* the seperator lines */
 .wraptop { 
 	padding:1em 0;
-	background:url('/src/styles/images/bg_header.png') 0 50% repeat-x #205bd4;
+	background:url('images/bg_header.png') 0 50% repeat-x #205bd4;
 	color:#fff;
 	overflow:hidden;
 }
