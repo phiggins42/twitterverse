@@ -43,10 +43,11 @@ dojo.mixin(beer, {
 				// to like it (search.twitter.com is fine tho)
 				term = term.replace(/\ or\ /g, " OR ");
 				
+				// FIXME: use WidgetSet every/some instead:
 				// make sure we don't have any of these terms in play already:
 				var exists = dijit.registry.filter(function(w){
 					return w.query == term;
-				}).length; // only in dojo.trunk, this is all false otherwise
+				}).length; // only in dojo trunk, this is all false otherwise
 
 				if(!exists){
 					var re = /public:(\w+)/;

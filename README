@@ -7,7 +7,6 @@ FIXME:
 	* expand docs
 	* figure out git->svn:externals
 	* close icon position, styles
-	* PublicTimeline reply username and id are wrong
 	
 TODO:
 	* Add UI for loading trending topics 

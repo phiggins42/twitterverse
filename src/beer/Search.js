@@ -327,7 +327,7 @@ dojo.require("dojo.NodeList-fx");
 		// all global animations for all instances:
 		anims:[]
 	})
-
+	
 	dojo.declare("beer.PublicStream", beer.SearchTwitter, {
 		// summary: a version of Search box that only handles a public_timeline for a username
 		// pass query:"username" to load twitter.com/username feed
@@ -336,13 +336,15 @@ dojo.require("dojo.NodeList-fx");
 		
 		update: function(){
 			// summary: Trigger a new fetch for more data.
-
+			
 			// setup the jsonp callback:
 			var id = "cb" + (count++),
+				// wait, this does the auth'd user despite the id="username" ?
 				urlbase = "http://twitter.com/statuses/friends_timeline.json"
-			;	
+			;
+			
 			beer.SearchTwitter.__cb[id] = d.hitch(this, "_handle", id);
-
+			
 			// generate a url
 			var url = [
 				urlbase, "?",
@@ -350,7 +352,7 @@ dojo.require("dojo.NodeList-fx");
 				this.maxId ? "&since_id=" + this.maxId : "",
 				"&callback=beer.SearchTwitter.__cb.", id
 			].join("");
-
+			
 			// fetch:
 			d.addScript(url, nop); // null function to allow removeChild(s)
 		},
@@ -399,20 +401,20 @@ dojo.require("dojo.NodeList-fx");
 				return; // no duplicates please.
 			}
 			this._seenIds[data.id] = true; 
-			
+			console.log(data);
 			// so not sure this is the right way to do this:
 			// encode the retweet and reply strings now:
 			var t = "http://twitter.com/home?status=";
 			d.mixin(data, {
 
 				retweetlink: [
-					t, "RT @", data.from_user, " ", encodeURIComponent(data.text)
+					t, "RT @", data.user.screen_name, " ", encodeURIComponent(data.text)
 				].join("").replace(/%20/, " ").replace(/\ /g, "+"),
 
 				replylink: [
-					t, "@", data.from_user, " ",
-					"&amp;in_reply_to_status_id=", data.id,
-					"&amp;in_reply_to=", data.from_user
+					t, "@", data.user.screen_name, " ",
+					"&amp;in_reply_to_status_id=", data.user.id,
+					"&amp;in_reply_to=", data.user.screen_name
 				].join("").replace(/\ /g, "+")
 
 			});
@@ -437,20 +439,22 @@ dojo.require("dojo.NodeList-fx");
 			// animate the node in. We're keeping track of all relevant running animations so we 
 			// can be sure they aren't _all_ trying to wipein at once. This staggers them all,
 			// and pops itself off when complete to decrement the delay
-			var all = beer.SearchTwitter.anims;
-			var a = d.fx.combine([
-				d.fx.wipeIn({ duration:500, node: n }),
-				d.fadeIn({ 
-					node: n, 
-					duration:700, 
-					onEnd: function(){
-						setTimeout(function(){ all.pop(); }, 10);
-					} 
-				})
-			]);
+			var all = beer.SearchTwitter.anims,
+				a = d.fx.combine([
+					d.fx.wipeIn({ duration:500, node: n }),
+					d.fadeIn({ 
+						node: n, 
+						duration:700, 
+						onEnd: function(){
+							setTimeout(function(){ all.pop(); }, 10);
+						} 
+					})
+				])
+			;
+
 			all.push(1);
 			
-			// play the animation
+			// play the animation, each staggered 50ms
 			a.play(50 * all.length);
 		},
 		
@@ -478,7 +482,7 @@ dojo.require("dojo.NodeList-fx");
 			this.connect(this.domNode, "onclick", "_onclick");
 			this.connect(this.closeIcon, "onclick", "_onclose");
 			
-		},
+		}
 		
 	});
 
