@@ -401,7 +401,7 @@ dojo.require("dojo.NodeList-fx");
 				return; // no duplicates please.
 			}
 			this._seenIds[data.id] = true; 
-			console.log(data);
+
 			// so not sure this is the right way to do this:
 			// encode the retweet and reply strings now:
 			var t = "http://twitter.com/home?status=";
