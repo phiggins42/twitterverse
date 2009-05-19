@@ -21,11 +21,12 @@ TODO:
 			(and so on)
 	* Implement beer.Portal for DnD	
 	* Add "more" to bottom of search and maintain page
-	* use cookies to store queries
 	* <strike>Implement RT removal in search.</strike>
 		* per instance
 			* settings per search box in UI?
 	* Trending terms
+	* use cookies to store queries (ala history in search box or:)
 	* Save search set 
-	* Mark all results as read
-	* Focus search field on load
+		* do we want named saves? eg: "ajax news" has 
+		  queries for "dojo OR dojobeer, mootools, ajaxian"
+		* or only one persisting favorite? 

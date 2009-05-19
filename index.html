@@ -13,7 +13,14 @@
 </head>
 <body>
 	<div id="container">
-
+		<div id="config">
+			<div>
+				<form id="settings">
+					<input type="checkbox" name="hideRT" id="hideRT"> 
+					<label for="hideRT">Filter out "retweets"</label>
+				</form>
+			</div>
+		</div>
 		<div class="wraptop">
 			<div id="header">
 				<h1>twitterverse(<span id="newCount"></span>)</h1>
@@ -23,8 +30,8 @@
 			</div>
 
 			<ul id="menu">
-				<li><a href="#">Mark all as read</a></li>
-				<li><a href="#">Save set</a></li>
+				<li><a id="markall" href="#">Mark all as read</a></li>
+				<li><a id="saveset" href="#">Save set</a></li>
 			</ul>
 		</div>
 
