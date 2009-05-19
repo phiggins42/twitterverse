@@ -7,6 +7,7 @@ FIXME:
 	* expand docs
 	* figure out git->svn:externals
 	* close icon position, styles
+	* PublicTimeline reply username and id are wrong
 	
 TODO:
 	* Add UI for loading trending topics 
@@ -17,9 +18,11 @@ TODO:
 			* something OR somethingelse
 			* from:someone
 			* to:someone
+			* public:[username] for auth'd public timeline
 			(and so on)
 	* Implement beer.Portal for DnD	
 	* Add "more" to bottom of search and maintain page
 	* use cookies to store queries
-	* add UI for trending topics
-	
+	* <strike>Implement RT removal in search.</strike>
+		* per instance
+			* settings per search box in UI?

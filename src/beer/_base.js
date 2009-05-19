@@ -49,8 +49,16 @@ dojo.mixin(beer, {
 				}).length; // only in dojo.trunk, this is all false otherwise
 
 				if(!exists){
-					// add a new beer instance
-					new beer.SearchTwitter({ query: term }).placeAt("ender", "before");
+					var re = /public:(\w+)/;
+					if(re.test(term)){
+						// add a public timeline for a username:
+						var user = term.match(re)[1];
+						new beer.PublicStream({ query: user }).placeAt("ender", "before");
+					}else{
+						// add a new beer Search instance
+						new beer.SearchTwitter({ query: term }).placeAt("ender", "before");
+					}
+					
 				}
 			});
 			

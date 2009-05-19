@@ -9,11 +9,22 @@ dojo.require("dojo.NodeList-fx");
 	
 	// global variables
 	var	urlbase = "http://search.twitter.com/search.json", 
+
+		// global callback counter
 		count = 0,
+		
+		// matches http:// stuff
 		urlRe = new RegExp("([A-Za-z]+://[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+)","g"),
+		
+		// dojo needs a null-op function
 		nop = function(){ /* do nothing */ },
+
+		// reuse ping() to notify UI of new items
 		ping = d.partial(d.publish, "/new/tweets", []),
-		cachedTemplate
+
+		// templates for Search and Public
+		cachedTemplate, 
+		cachedPublicTemplate
 	;
 	
 	// exposed so can be used in the formatter function dojo.string.substitute
@@ -21,11 +32,12 @@ dojo.require("dojo.NodeList-fx");
 		return str
 			// replace direct url's in the tweet
 			.replace(urlRe, function(m){
+				// if longer than two, shorten.
 				var ms = m.length > 20 ? m.slice(0, 17) + "..." : m;
 				return "<a href='" + m + "' title='" + m + "' target='_blank'>" + ms + "</a>";
 			})
 			// and replace the @replies and references with links
-			.replace(/@([\w]+)/g, function(a,m){
+			.replace(/@([\w]+)/g, function(_, m){
 				return "<a href='http://twitter.com/" + m + "'>@" + m + "</a>";
 			})
 		;
@@ -53,6 +65,10 @@ dojo.require("dojo.NodeList-fx");
 		//		A template string to use for each Tweet-item. Filtered through dojo.string.substitute
 		//		with each tweet data item as the content.
 		itemTemplate:"", 
+
+		// showRT: Boolean
+		//		Filter out Tweets starting with "RT" if set false.
+		showRT: false, 
 		
 		// childSelector: String
 		//		A CSS3 query string used to identifiy each child.
@@ -60,7 +76,6 @@ dojo.require("dojo.NodeList-fx");
 
 		postCreate: function(){
 
-			this._callbacks = {};
 			this._seenIds = {};
 			this._query = encodeURIComponent(this.query);
 			this._baseInterval = this.interval;
@@ -181,7 +196,15 @@ dojo.require("dojo.NodeList-fx");
 				this.poll();
 			}else{
 				// we have new results, add each of them:
-				d.forEach(response.results, this._addItem, this);
+				
+				d.forEach(this.showRT ? 
+					// just pass the array
+					response.results : 
+					// else pass a filtered array omiting "RT" things 
+					d.filter(response.results, function(item){
+						return !(/^RT/.test(item.text));
+					}),
+				this._addItem, this);
 
 				// update the ui
 				this._addToCount(response.results.length);
@@ -304,5 +327,159 @@ dojo.require("dojo.NodeList-fx");
 		// all global animations for all instances:
 		anims:[]
 	})
+
+	dojo.declare("beer.PublicStream", beer.SearchTwitter, {
+		// summary: a version of Search box that only handles a public_timeline for a username
+		// pass query:"username" to load twitter.com/username feed
+		
+		// FIXME: DRY, refactore update/handle/_addItem to handle schema/multiple templates
+		
+		update: function(){
+			// summary: Trigger a new fetch for more data.
+
+			// setup the jsonp callback:
+			var id = "cb" + (count++),
+				urlbase = "http://twitter.com/statuses/friends_timeline.json"
+			;	
+			beer.SearchTwitter.__cb[id] = d.hitch(this, "_handle", id);
+
+			// generate a url
+			var url = [
+				urlbase, "?",
+				"id=", this._query,
+				this.maxId ? "&since_id=" + this.maxId : "",
+				"&callback=beer.SearchTwitter.__cb.", id
+			].join("");
+
+			// fetch:
+			d.addScript(url, nop); // null function to allow removeChild(s)
+		},
+		
+		_handle: function(id, response){
+			// summary: Handle the incoming data for this request.
+			
+			this._items = this.children();
+			
+			if(this.maxId && response.max_id > this.maxId){
+				// reset the timer is we've gotten a new item
+				this.interval = this._baseInterval;
+			}
+			// update the new maxid
+			this.maxId = response.max_id;
+			
+			// they come in backwards?
+			response.reverse();
+			
+			if(!response.length){
+				// if no new results, bump the interval a bit to prevent overusing the API
+				this.stop();
+				this.interval *= 1.25;
+				this.poll();
+			}else{
+				// we have new results, add each of them:
+				d.forEach(response, this._addItem, this);
+
+				// update the ui
+				this._addToCount(response.length);
+				
+				// remove extra tweets. we only want 15. _removeItem will not remove .unseen items, no worries.
+				if(this._items.length){
+					this.children().splice(15).forEach(this._removeItem, this).length;
+				}
+			}
+			
+			// erase our callback ref for memory
+			delete beer.SearchTwitter.__cb[id];
+		},
+		
+		_addItem: function(data){
+			// summary: Create a new child from a dataitem returned in the response.results.
+			
+			if(this._seenIds[data.id]){
+				return; // no duplicates please.
+			}
+			this._seenIds[data.id] = true; 
+			
+			// so not sure this is the right way to do this:
+			// encode the retweet and reply strings now:
+			var t = "http://twitter.com/home?status=";
+			d.mixin(data, {
+
+				retweetlink: [
+					t, "RT @", data.from_user, " ", encodeURIComponent(data.text)
+				].join("").replace(/%20/, " ").replace(/\ /g, "+"),
+
+				replylink: [
+					t, "@", data.from_user, " ",
+					"&amp;in_reply_to_status_id=", data.id,
+					"&amp;in_reply_to=", data.from_user
+				].join("").replace(/\ /g, "+")
+
+			});
+			
+			// create the markup from the itemTemplate and data
+			var n = d.place(
+				d.string.substitute(this.itemTemplate, data),
+			 	this.containerNode, 
+				"first"
+			);
+			
+			// prepare the node
+			d.style(n, {
+				opacity:0,
+				height:"0",
+				overflow:"hidden"
+			});
+			
+			// setup some events for hoverstates:
+			d.query(n).hoverClass("over");
+			
+			// animate the node in. We're keeping track of all relevant running animations so we 
+			// can be sure they aren't _all_ trying to wipein at once. This staggers them all,
+			// and pops itself off when complete to decrement the delay
+			var all = beer.SearchTwitter.anims;
+			var a = d.fx.combine([
+				d.fx.wipeIn({ duration:500, node: n }),
+				d.fadeIn({ 
+					node: n, 
+					duration:700, 
+					onEnd: function(){
+						setTimeout(function(){ all.pop(); }, 10);
+					} 
+				})
+			]);
+			all.push(1);
+			
+			// play the animation
+			a.play(50 * all.length);
+		},
+		
+		postCreate: function(){
+
+			this._seenIds = {};
+			this._query = encodeURIComponent(this.query);
+			this._baseInterval = this.interval;
+			
+			if(!cachedPublicTemplate){
+				dojo.xhrGet({
+					url: d.moduleUrl("beer", "templates/PublicItemTemplate.html"),
+					load: d.hitch(this, function(data){
+						cachedPublicTemplate = this.itemTemplate = d.trim(data);
+					}),
+					sync:true
+				});
+			}else{
+				this.itemTemplate = cachedPublicTemplate;
+			}
+
+			this.poll();
+			this.update(); // always do it now
+			
+			this.connect(this.domNode, "onclick", "_onclick");
+			this.connect(this.closeIcon, "onclick", "_onclose");
+			
+		},
+		
+	});
 
 })(dojo);
