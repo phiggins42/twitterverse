@@ -45,7 +45,6 @@ a {
 /* the seperator lines */
 .wraptop { 
 	padding:1em 0;
-	#background:url('images/bg_header.png') 0 50% repeat-x #205bd4;
 	background-color:#1a212c;
 	color:#fff;
 	overflow:hidden;
@@ -54,7 +53,7 @@ a {
 .wraptop h1 {
 	font-size:100%;
 	#float:left;
-	color:#ba291c;
+	color:#fff;
 }
 
 .wrapbot { 
@@ -67,18 +66,13 @@ a {
 	border-bottom:1px solid #dedede;
 }
 
-
-/* SearchTwitter instances are divs */
 div.results {
 	width:310px;
 	float:left;
-	margin:0 8px 8px 0;
+	margin:0 8px 14px 0;
 	margin-left:4px;
 	position:relative;
-	#border:1px solid #1a212c;
-	#background-color:#71b095;
-	#border:3px solid #71b095;
-	border:2px solid #dedede;
+	border:2px solid #aebcd4;
 	-webkit-border-radius:10px;
 	-moz-border-radius:10px;
 }
@@ -122,8 +116,8 @@ div.results ul {
 div.results li {
 	padding:5px 0 5px 5px;
 	height:75px;
-	margin:0 5px 5px 0;
-	border:1px solid #dedba7;
+	margin:0 8px 5px 0;
+	border:1px solid #aebcd4;
 	-webkit-border-radius:5px;
 	-moz-border-radius:5px;
 }
@@ -131,7 +125,7 @@ div.results li {
 div.results li.unseen {
 	border:1px solid #dedba7;
 	color:#1a212c;
-	background-color:#dedba7;
+	background-color:#fffccc;
 }
 
 div.results li img {

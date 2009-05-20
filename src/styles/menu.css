@@ -13,13 +13,12 @@
 }
 
 .dijitMenuBar ul li a {
-	color:#1a212c;
 	padding:2px 11px 2px 9px;
 	z-index:999;
 	text-decoration:none;
 }
 .dijitMenuBar ul li a:hover {
-	color:#000;
+	color:#fff;
 	z-index:999;
 }
 
@@ -28,9 +27,8 @@
 }
 
 .dijitMenuBar li ul {
-	border:1px solid #1a212c;
+	border:1px solid #dedede;
 	background-color:#fff;
-	padding:2px;
 	position:absolute;
 	width:198px;
 	z-index:998;
@@ -39,11 +37,11 @@
 .dijitMenuBar a { display:block; }
 .dijitMenuBar li ul li a {
 	background-color:#fff;
-	color:#000;
 	position:relative;
 	padding:1px 9px 1px 19px;
 	width:170px;
 }
+
 .dijitMenuBar li ul li a:hover {
 	background:#fff;
 	/* this one either. */
@@ -54,10 +52,12 @@
 	background:#1a212c;
 	color:#fff;
 }
+
 #menu ul li.selected ul li a {
 	background:#fff;
 	color:#1a212c;
 }
+
 #menu ul li.selected ul li a:hover {
 	color:#fff;
 	background:#1a212c;
