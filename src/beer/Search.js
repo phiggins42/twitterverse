@@ -21,7 +21,9 @@ dojo.require("dojo.NodeList-fx");
 
 		// templates for Search and Public
 		cachedTemplate, 
-		cachedPublicTemplate
+		cachedPublicTemplate,
+		
+		_seenIds = {}
 	;
 	
 	// exposed so can be used in the formatter function dojo.string.substitute
@@ -29,7 +31,7 @@ dojo.require("dojo.NodeList-fx");
 		return str
 			// replace direct url's in the tweet
 			.replace(urlRe, function(m){
-				// if longer than two, shorten.
+				// if longer than twenty, shorten.
 				var ms = m.length > 20 ? m.slice(0, 17) + "..." : m;
 				return "<a href='" + m + "' title='" + m + "' target='_blank'>" + ms + "</a>";
 			})
@@ -84,7 +86,6 @@ dojo.require("dojo.NodeList-fx");
 		
 		postCreate: function(){
 
-			this._seenIds = {};
 			this._query = encodeURIComponent(this.query);
 			this._baseInterval = this.interval;
 			
@@ -236,10 +237,10 @@ dojo.require("dojo.NodeList-fx");
 		_addItem: function(data){
 			// summary: Create a new child from a dataitem returned in the response.results.
 			
-			if(this._seenIds[data.id]){
+			if(_seenIds[data.id]){
 				return; // no duplicates please.
 			}
-			this._seenIds[data.id] = true; 
+			_seenIds[data.id] = true; 
 			
 			// so not sure this is the right way to do this:
 			// encode the retweet and reply strings now:
@@ -329,7 +330,7 @@ dojo.require("dojo.NodeList-fx");
 	d.mixin(beer.SearchTwitter, {
 		// all global animations for all instances:
 		anims:[]
-	})
+	});
 	
 	dojo.declare("beer.PublicStream", beer.SearchTwitter, {
 		// summary: a version of Search box that only handles a public_timeline for a username
@@ -394,10 +395,10 @@ dojo.require("dojo.NodeList-fx");
 		_addItem: function(data){
 			// summary: Create a new child from a dataitem returned in the response.results.
 			
-			if(this._seenIds[data.id]){
+			if(_seenIds[data.id]){
 				return; // no duplicates please.
 			}
-			this._seenIds[data.id] = true; 
+			_seenIds[data.id] = true; 
 
 			// so not sure this is the right way to do this:
 			// encode the retweet and reply strings now:
@@ -457,7 +458,6 @@ dojo.require("dojo.NodeList-fx");
 		
 		postCreate: function(){
 
-			this._seenIds = {};
 			this._query = encodeURIComponent(this.query);
 			this._baseInterval = this.interval;
 			

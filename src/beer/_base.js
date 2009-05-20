@@ -8,8 +8,6 @@ dojo.require("plugd.trigger");
 dojo.require("plugd.base"); // fun code
 dojo.require("plugd.script"); // more fun
 
-dojo.require("dojox.analytics.Urchin");
-
 // load our module code
 dojo.require("beer.Search"); // our SearchBoxThinger
 dojo.require("beer.Config"); // our config singleton
@@ -117,12 +115,15 @@ dojo.mixin(beer, {
 	checkGA: function(){
 		// summary: A function to track analytics if this is on dojotoolkit.org
 		if(/dojotoolkit/.test(window.location.href)){
-			new dojox.analytics.Urchin({
-				acct:"UA-3572741-1",
-				GAonLoad: function(){
-					this.trackPageView("/demos/twitterverse");
-				}
-			});
+			// using plugd's .load so build doesn't see this
+			dojo.load("dojox.analytics.Urchin", function(){
+				new dojox.analytics.Urchin({
+					acct:"UA-3572741-1",
+					GAonLoad: function(){
+						this.trackPageView("/demos/twitterverse");
+					}
+				});
+			})
 		}
 	},
 	
@@ -139,7 +140,7 @@ dojo.mixin(beer, {
 		this.loadTrends();
 
 		// init the set manager:
-		beer.sets.init();;
+		beer.sets.init();
 		
 		// setup the behavior
 		dojo.query("#menu").menu();
@@ -159,7 +160,7 @@ dojo.mixin(beer, {
 
 		// wire up the 'save set' link
 		dojo.query("#saveset").onclick(beer.sets, "add");
-				
+		
 	},
 	
 	loadTrends: function(){
