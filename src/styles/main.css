@@ -26,8 +26,8 @@ a {
 }
 
 #search { 
-	float:right;
-	margin:5px 20px 0 50px;
+	#float:right;
+	margin:5px 0 0 0;
 }
 
 #search input {
@@ -45,15 +45,15 @@ a {
 /* the seperator lines */
 .wraptop { 
 	padding:1em 0;
-	background:url('images/bg_header.png') 0 50% repeat-x #205bd4;
+	background-color:#1a212c;
 	color:#fff;
 	overflow:hidden;
 }
 
 .wraptop h1 {
-	float:left;
+	font-size:100%;
+	#float:left;
 	color:#fff;
-	font-weight:bold;
 }
 
 .wrapbot { 
@@ -67,35 +67,13 @@ a {
 	border-bottom:1px solid #dedede;
 }
 
-/*
-	list-style:none;
-	overflow:hidden;
-	margin:0 1.2em;
-	padding:0;
-	font-size:80%;
-}
-
-#menu li {
-	float:left;
-	margin:0 10px 0 0;
-}
-*/
-
-#menu a {
-	color:#666;
-	text-decoration:none;
-}
-
-/* SearchTwitter instances are divs */
 div.results {
 	width:310px;
 	float:left;
-	margin:0 8px 8px 0;
+	margin:0 8px 14px 0;
 	margin-left:4px;
 	position:relative;
-	#border:1px solid #1a212c;
-	#background-color:#71b095;
-	border:3px solid #71b095;
+	border:2px solid #aebcd4;
 	-webkit-border-radius:10px;
 	-moz-border-radius:10px;
 }
@@ -139,14 +117,16 @@ div.results ul {
 div.results li {
 	padding:5px 0 5px 5px;
 	height:75px;
-	margin:0 5px 5px 0;
+	margin:0 8px 5px 0;
+	border:1px solid #aebcd4;
 	-webkit-border-radius:5px;
 	-moz-border-radius:5px;
 }
 
 div.results li.unseen {
+	border:1px solid #dedba7;
 	color:#1a212c;
-	background-color:#dedba7;
+	background-color:#fffccc;
 }
 
 div.results li img {
