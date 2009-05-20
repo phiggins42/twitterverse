@@ -146,6 +146,13 @@ div.results li p {
 #footer { 
 	padding-top:1em; 
 	font-size:10px;
+	padding-left:10px;
+}
+#footer p {
+	margin-top:5px;
+}
+p.subtle {
+	font-size:6pt;
 }
 
 /* reply, retween icons */
