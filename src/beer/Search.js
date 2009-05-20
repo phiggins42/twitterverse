@@ -40,12 +40,12 @@ dojo.require("dojo.NodeList-fx");
 				return "<a href='http://twitter.com/" + m + "'>@" + m + "</a>";
 			})
 		;
-	}
-	
+	};
+
 	beer.fixurl = function(str){
 		// summary: Fix up a URL so that it may be passed to twitter.com/?status=
 		return encodeURI(str);
-	}
+	};
 	
 	d.declare("beer.SearchTwitter", [dijit._Widget, dijit._Templated], {
 		// summary: A Search box instance. 
@@ -109,43 +109,59 @@ dojo.require("dojo.NodeList-fx");
 			
 		},
 		
+		_markRead: function() {
+			var l = d.query(".unseen", this.containerNode);
+
+			if(l.length > 100){
+				// too many to animate smoothly imo, just set style
+				l.style("backgroundColor", "#fff").removeClass("unseen");
+			}else{
+				// animate them instead
+				l.animateProperty({
+					properties: {
+						color:"#999",
+						backgroundColor:"#fff"
+					},
+					// then set the 'seen' state
+					onEnd: function(){ 
+						l.removeClass("unseen");
+					}
+				}).play();
+			}
+			
+			// update the unseen count, and publish the notification 
+			// in case anyone cares to listen.
+			d.fadeOut({ 
+				node: this.newCount, 
+				onEnd: function(n){
+					n.innerHTML = "";
+					d.style(n, "opacity", 1);
+					ping();
+				}
+			}).play();
+		},
+
+		_actions : function(e) {
+			switch (e.target) {
+				case this.closeIcon :
+					this._onclose();
+				break;
+				
+				case this.markReadIcon : 
+					this._markRead();
+				break;
+			}
+		},
+		
 		_onclick: function(e){
 			// summary: Handle all clicks within our domNode
 			
 			if(!e.target.href && !e.target.parentNode.href){
 				// if the link isn't a real link (or a direct child of a link (eg: a->img)), do stuff:
 				e.preventDefault();
+				this._markRead();
 				
-				var l = d.query(".unseen", this.containerNode);
-
-				if(l.length > 100){
-					// too many to animate smoothly imo, just set style
-					l.style("backgroundColor", "#fff").removeClass("unseen");
-				}else{
-					// animate them instead
-					l.animateProperty({
-						properties: {
-							color:"#999",
-							backgroundColor:"#fff"
-						},
-						// then set the 'seen' state
-						onEnd: function(){ 
-							l.removeClass("unseen");
-						}
-					}).play();
-				}
-				
-				// update the unseen count, and publish the notification 
-				// in case anyone cares to listen.
-				d.fadeOut({ 
-					node: this.newCount, 
-					onEnd: function(n){
-						n.innerHTML = "";
-						d.style(n, "opacity", 1);
-						ping();
-					}
-				}).play();
-				
+			
 			}
 		},
 			
@@ -477,7 +493,7 @@ dojo.require("dojo.NodeList-fx");
 			this.update(); // always do it now
 			
 			this.connect(this.domNode, "onclick", "_onclick");
-			this.connect(this.closeIcon, "onclick", "_onclose");
+			this.connect(this.actions, "onclick", "_actions");
 			
 		}
 		

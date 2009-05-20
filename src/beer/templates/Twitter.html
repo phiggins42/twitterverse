@@ -1,7 +1,10 @@
 <div class="results twitter">
 	<h2>${query} 
 		<span dojoAttachPoint="newCount"></span>
-		<span class="nav"><a dojoAttachPoint="closeIcon" class='icon' href='#'></a></span>
+		<span dojoAttachPoint="actions" class="nav">
+			<a dojoAttachPoint="markReadIcon" class="icon" id="markReadIcon">Mark Read</a> 
+			<a dojoAttachPoint="closeIcon" id="closeIcon" class="icon" href='#'></a>
+		</span>
 	</h2>
 	<ul dojoAttachPoint="containerNode"></ul>
 </div>

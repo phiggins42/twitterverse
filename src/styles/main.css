@@ -91,16 +91,24 @@ div.results h2 {
 	top:6px;
 }
 
-/* the close icon for each fieldset */
 div.results h2 .icon {
+	font-size:70%;
+	text-transform:lowercase;
+	color:#1a212c;
+	float:left;
+	display:block;
+	margin:0 5px 0 0;
+}
+
+div.results h2 #closeIcon {
 	display:block;
 	height:16px;
 	width:16px;
 	background:url("images/spriteRoundedIconsSmall.png") no-repeat -60px 1px;
 }
 
-div.results h2 .icon:hover,
-div.results h2 .icon:focus {
+div.results h2 #closeIcon:hover,
+div.results h2 #closeIcon:focus {
 	outline:none;
 	background-position:-60px -29px;
 }
