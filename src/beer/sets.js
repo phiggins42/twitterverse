@@ -2,8 +2,9 @@ dojo.provide("beer.sets");
 // module which handles the "sets" in a cookie
 
 dojo.require("dojo.cookie");
+dojo.require("plugd.base");
 
-(function(d){ 
+;(function(d){ 
 
 	var currentsets = {};
 
@@ -22,7 +23,7 @@ dojo.require("dojo.cookie");
 
 			if(setname && !currentsets[setname]){
 				currentsets[setname] = state;
-				d.cookie("tvsets", dojo.toJson(currentsets));
+				this._set(currentsets);
 				this._addMenuItem(setname);
 			}else{
 				d.publish("/system/warning", ["Need to select a unique name for your set"]);
@@ -91,6 +92,7 @@ dojo.require("dojo.cookie");
 			return d.fromJson(d.cookie("tvsets"));
 		},
 		_set: function(setdata){
+			console.log('setting', setdata);
 			currentsets = setdata;
 			return d.cookie("tvsets", d.toJson(setdata));
 		},
@@ -113,14 +115,16 @@ dojo.require("dojo.cookie");
 				|| d.place("<ul></ul>", "clearMenu", "after")
 			;
 
-			var info = currentsets = this._get();
+			var info = this._get();
 			if(info){
+				currentsets = info;
 				// console.log("present:", info);
 				for(var i in info){
 					this._addMenuItem(i);
 				}
 			}
 		}
+		
 	});
 
 })(dojo);
