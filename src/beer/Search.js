@@ -52,7 +52,7 @@ dojo.require("dojo.NodeList-fx");
 		
 		// interval: Integer
 		//		Time to delay between polls. Twitter API limits to 100/hr
-		interval:30000,
+		interval:60000,
 		
 		// query: String
 		//		A default search string to use. Override for each instance
