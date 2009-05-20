@@ -8,6 +8,15 @@ dependencies = {
 	cssOptimize:"comments.keepLines",
 	releaseName:"twit",
 	
+	// plugd options (defaults, limits size for useless stuff)
+	redundant: "off",
+	silly: "off",
+	compat: "off",
+	conflict: "on",
+	autoConflict: "off", 
+	magicQuery: "on",
+	superMagic: "off",
+		
 	// the "layers"
 	layers: [
 		{

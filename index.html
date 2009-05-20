@@ -4,10 +4,15 @@
 <head>
 
 	<title>twitterverse()</title>
-	
+
 	<link rel="stylesheet" href="src/styles/main.css">
-	
 	<script src="src/dojo/dojo.js"></script>
+
+	<!-- uncomment for production
+	<link rel="stylesheet" href="src/release/twit/styles/main.css">
+	<script src="src/release/twit/dojo/dojo.js"></script>
+	-->
+
 	<script>dojo.require("beer.layer");</script>
 
 </head>
@@ -21,6 +26,7 @@
 				</form>
 			</div>
 		</div>
+		
 		<div class="wraptop">
 			<div id="header">
 				<h1>twitterverse(<span id="newCount"></span>)</h1>
@@ -28,11 +34,22 @@
 					<label for="q">Search:</label> <input id="q" name="q" value="#dojobeer">
 				</div>
 			</div>
+		</div>
 
-			<ul id="menu">
+		<div id="menu">
+			<ul>
+				<li><a id="trendingMenu" href="#">Trending</a>
+					<ul>
+						<li class="loading"><a href="#"></a></li>
+					</ul>
+				</li>
+				<li><a id="setsMenu" href="#">Sets</a>
+					<ul>
+						<li><a id="saveset" href="#">Save set</a></li>
+						<li><a id="clearMenu" href="#">Clear set</a></li>
+					</ul>
+				</li>
 				<li><a id="markall" href="#">Mark all as read</a></li>
-				<li><a id="saveset" href="#">Save set</a></li>
-				<li><a href="#">Clear set</a></li>
 			</ul>
 		</div>
 

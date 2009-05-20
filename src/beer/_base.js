@@ -3,39 +3,31 @@
 dojo.provide("beer._base"); // alert the build to our presence
 
 // load our plugins:
-dojo.require("dojo.cookie");
+dojo.require("plugd.base"); // see beer.profile.js for how plugd is configured
 dojo.require("plugd.trigger");
 dojo.require("plugd.base"); // fun code
 dojo.require("plugd.script"); // more fun
+
 dojo.require("dojox.analytics.Urchin");
 
 // load our module code
 dojo.require("beer.Search"); // our SearchBoxThinger
 dojo.require("beer.Config"); // our config singleton
+dojo.require("beer.menu");
+dojo.require("beer.sets");
 
 dojo.mixin(beer, {
 	
 	// bootstrap code:
 	init: function(){
 		
+		this.initMenu();
+				
 		// listen for key presses in the main listen, and focus on page load
 		dojo.query("#q").onkeypress(this, "_inputListener").forEach(function(n){
 			setTimeout(function(){ n.focus(); }, 75);
 		});
-		
-		// wireup up the 'mark all read' link
-		dojo.query("#markall").onclick(this, function(e){
-			e.preventDefault();
-			this._getSearches().forEach(function(w){
-				// yay plugd, no need to dig up which function is reacting to
-				// onclick, just trigger a fake event from the widget node
-				dojo.trigger(w.domNode, "onclick");
-			});
-		});
-
-		// wire up the 'save set' link
-		dojo.query("#saveset").onclick(this, "addSet");
-		
+				
 		// listen for the search boxes telling us there are new items
 		dojo.subscribe("/new/tweets", this, "setTitle");
 		
@@ -52,32 +44,18 @@ dojo.mixin(beer, {
 		});
 	},
 	
-	addSet: function(e){
-		// summary: // only in dojo trunk, this is all false otherwise add the current selected view as a cookie
-		e && e.preventDefault(); // safey first
-		var state = this._getSearches().map(function(w){
-			return {
-				q: w.query, a: w.auth, id: w.maxId
-			}
-		});
-		console.log('should set cookie for:', state);
-	},
-	
-	loadSet: function(byName){
-		// hmmmmmmm
-	},
-	
 	_inputListener: function(e){
 		// summary: I'm probably attached to the main input on the page. 
 		
-		var input = dojo.byId("q");
 		if(e.charOrCode == dojo.keys.ENTER){
-			this._addSearches(input);
+			this._addSearches("q");
 		}
 	},
 	
-	_addSearches: function(input){
+	_addSearches: function(/* String|DomNode */input){
 		// break the input into comma seprated values, or one if lacking comma
+
+		input = dojo.byId(input);
 		var l = dojo.indexOf(input.value, ",") >= 0 
 			? input.value.split(",") : [input.value];
 
@@ -146,6 +124,76 @@ dojo.mixin(beer, {
 				}
 			});
 		}
+	},
+	
+	initMenu: function(){
+		// handle all the menu stuff. perhaps move into menu.js by itself
+		
+		this.trendNode = dojo.query("#trendingMenu + ul")
+			.onclick(this, function(e){
+				e.preventDefault();
+				this._addQuery(e.target.innerHTML);
+			})
+		;
+		
+		this.loadTrends();
+
+		// init the set manager:
+		beer.sets.init();;
+		
+		// setup the behavior
+		dojo.query("#menu").menu();
+		
+		// wire up known clicks, grab trends
+		// wireup up the 'mark all read' link
+
+		dojo.query("#markall").onclick(function(e){
+			e.preventDefault();
+			beer._getSearches().forEach(function(w){
+				// yay plugd, no need to dig up which function is reacting to
+				// onclick, just trigger a fake event from the widget node
+				// FIXME: should move to w.markAsRead() or similar
+				dojo.trigger(w.domNode, "onclick");
+			});
+		});
+
+		// wire up the 'save set' link
+		dojo.query("#saveset").onclick(beer.sets, "add");
+				
+	},
+	
+	_cbCount: 0,
+	getJsonp: function(url, callback){
+		// extension to plugd's addScript to replace callback=? with a generated 
+		// callback member, and delete it. 
+		
+		var id = "_cbk" + (beer._cbCount++);
+		beer[id] = callback;
+
+		url = url.replace(/callback=\?/, "callback=beer." + id + "");
+		
+		dojo.addScript(url, function(){
+			delete beer[id];
+		});
+		
+	},
+	
+	loadTrends: function(){
+		// summary: load the trends for the menu
+		
+		this.getJsonp(
+			"http://search.twitter.com/trends/current.json?callback=?", 
+			dojo.hitch(this, function(response){
+				this.trendNode.empty();
+				for(var i in response.trends){
+					dojo.forEach(response.trends[i], function(trend){
+						dojo.place("<li><a href='#' rel='" + trend.query + "'>" + trend.name + "</a></li>", this.trendNode[0]);
+					}, this);
+				}
+				
+			})
+		);
+		
 	}
 	
 	// hack: experimental moveable
