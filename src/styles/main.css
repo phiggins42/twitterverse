@@ -85,6 +85,11 @@ div.results h2 {
 	color:#1a212c;
 }
 
+div.public h2 {
+	background: url("images/person.png") 8px 50% no-repeat transparent;
+	padding-left: 28px;
+}
+
 div.results h2 .actions {
 	position:absolute;
 	right:5px;

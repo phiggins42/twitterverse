@@ -104,8 +104,7 @@ dojo.require("dojo.NodeList-fx");
 			this.poll();
 			this.update(); // always do it now
 			
-			this.connect(this.domNode, "onclick", "_onclick");
-			this.connect(this.closeIcon, "onclick", "_onclose");
+			this.connect(this.actions, "onclick", "_actions");
 			
 		},
 		
@@ -160,8 +159,6 @@ dojo.require("dojo.NodeList-fx");
 				// if the link isn't a real link (or a direct child of a link (eg: a->img)), do stuff:
 				e.preventDefault();
 				this._markRead();
-				
-			
 			}
 		},
 			
@@ -474,6 +471,8 @@ dojo.require("dojo.NodeList-fx");
 		
 		postCreate: function(){
 
+			d.addClass(this.domNode, "public");
+
 			this._query = encodeURIComponent(this.query);
 			this._baseInterval = this.interval;
 			
@@ -492,7 +491,6 @@ dojo.require("dojo.NodeList-fx");
 			this.poll();
 			this.update(); // always do it now
 			
-			this.connect(this.domNode, "onclick", "_onclick");
 			this.connect(this.actions, "onclick", "_actions");
 			
 		}
