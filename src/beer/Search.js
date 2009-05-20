@@ -176,7 +176,7 @@ dojo.require("dojo.NodeList-fx");
 			].join("");
 			
 			// fetch:
-			beer.getJsonp(url, d.hitch(this, "_handle"));
+			dojo.addScript(url, d.hitch(this, "_handle"));
 		},
 		
 		_handle: function(response){
@@ -352,7 +352,7 @@ dojo.require("dojo.NodeList-fx");
 			].join("");
 			
 			// fetch:
-			beer.getJsonp(url, d.hitch(this, "_handle"));
+			dojo.addScript(url, d.hitch(this, "_handle"));
 		},
 		
 		_handle: function(response){

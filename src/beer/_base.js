@@ -162,26 +162,10 @@ dojo.mixin(beer, {
 				
 	},
 	
-	_cbCount: 0,
-	getJsonp: function(url, callback){
-		// extension to plugd's addScript to replace callback=? with a generated 
-		// callback member, and delete it. 
-		
-		var id = "_cbk" + (beer._cbCount++);
-		beer[id] = callback;
-
-		url = url.replace(/callback=\?/, "callback=beer." + id + "");
-		
-		dojo.addScript(url, function(){
-			delete beer[id];
-		});
-		
-	},
-	
 	loadTrends: function(){
 		// summary: load the trends for the menu
 		
-		this.getJsonp(
+		dojo.addScript(
 			"http://search.twitter.com/trends/current.json?callback=?", 
 			dojo.hitch(this, function(response){
 				this.trendNode.empty();

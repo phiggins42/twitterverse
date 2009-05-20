@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -d dojo -a -d dojox -a -d plugd -a -d util -a -d dijit ]; then
+if [ -d dojo -a -d dojox/analytics -a -d plugd -a -d util -a -d dijit ]; then
 	
 	echo "Updating all required projects ... ";
 	svn up dojo 
