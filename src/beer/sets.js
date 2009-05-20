@@ -62,9 +62,10 @@ dojo.require("dojo.cookie");
 					if(!beer._getSearches().some(function(w){
 						return w.query == item.q;
 					})){
+						console.log(item.q);
 						// add it, base on auth
 						new beer[(item.a ? 
-							"PublicTimeline" : "SearchTwitter"
+							"PublicStream" : "SearchTwitter"
 						)]({
 							query: item.q, maxId: item.id
 						}).placeAt("ender","before");
