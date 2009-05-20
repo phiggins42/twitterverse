@@ -85,7 +85,7 @@ div.results h2 {
 	color:#1a212c;
 }
 
-.nav {
+div.results h2 .actions {
 	position:absolute;
 	right:5px;
 	top:6px;
@@ -98,19 +98,32 @@ div.results h2 .icon {
 	float:left;
 	display:block;
 	margin:0 5px 0 0;
+	cursor: pointer;
+	text-indent: -999px;
 }
 
 div.results h2 #closeIcon {
-	display:block;
 	height:16px;
 	width:16px;
 	background:url("images/spriteRoundedIconsSmall.png") no-repeat -60px 1px;
+}
+
+div.results h2 #markReadIcon {
+	height: 16px;
+	width: 16px;
+	background:url("images/spriteRoundedIconsSmall.png") no-repeat -77px 0px;
 }
 
 div.results h2 #closeIcon:hover,
 div.results h2 #closeIcon:focus {
 	outline:none;
 	background-position:-60px -29px;
+}
+
+div.results h2 #markReadIcon:hover,
+div.results h2 #markReadIcon:focus {
+	outline:none;
+	background-position:-77px -15px;
 }
 
 div.results ul {
