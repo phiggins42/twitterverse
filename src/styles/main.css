@@ -1,7 +1,7 @@
 /* Generic Styles */
 body, html {
 	font-family:"Lucida Grande","Trebuchet MS",Verdana,sans-serif;
-	color:#333;
+	color:#1a212c;
 	margin:0;
 	padding:0;
 	background:#ededed;
@@ -12,6 +12,10 @@ h1, h2 {
 	font-weight:normal;
 	margin:0;
 	padding:0;
+}
+
+a {
+	color:#d13f32;
 }
 
 #header, #footer {
@@ -45,6 +49,8 @@ h1, h2 {
 
 .wraptop h1 {
 	float:left;
+	color:#fff;
+	font-weight:bold;
 }
 
 .wrapbot { 
@@ -71,22 +77,24 @@ h1, h2 {
 
 /* SearchTwitter instances are fieldsets */
 div.results {
-	width:320px;
+	width:310px;
 	float:left;
 	margin:0 10px 10px 0;
 	margin-left:4px;
 	position:relative;
-	border:1px solid #dde;
-	-webkit-border-radius:7px;
-	-moz-border-radius:7px;
+	#border:1px solid #1a212c;
+	#background-color:#71b095;
+	border:3px solid #71b095;
+	-webkit-border-radius:10px;
+	-moz-border-radius:10px;
 }
 
 div.results h2 { 
 	font-size:100%;
-	padding:5px;
+	padding:8px;
 	margin:0 0 5px 0;
 	position:relative;
-	color:#333;
+	color:#1a212c;
 }
 
 .nav {
@@ -112,7 +120,7 @@ div.results h2 .icon:focus {
 div.results ul {
 	height:250px;
 	overflow:auto;
-	margin:5px; 
+	margin:8px; 
 	padding:0;
 	list-style:none;
 }
@@ -126,8 +134,8 @@ div.results li {
 }
 
 div.results li.unseen {
-	color:#333;
-	background:#c7d9ff;
+	color:#1a212c;
+	background-color:#dedba7;
 }
 
 div.results li img {
