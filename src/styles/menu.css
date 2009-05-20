@@ -2,7 +2,7 @@
 	background:transparent;
 	margin:1px 0 0;
 	cursor:pointer;
-	height:1.9em;
+	height:1.5em;
 }
 
 .dijitMenuBar ul {
@@ -28,10 +28,11 @@
 
 .dijitMenuBar li ul {
 	border:1px solid #666;
-	background-color:#ededed;
+	background-color:#fff;
 	padding:2px;
 	position:absolute;
-	width:158px;
+	width:198px;
+	z-index:998;
 }
 
 .dijitMenuBar a { display:block; }
@@ -40,7 +41,7 @@
 	color:#000;
 	position:relative;
 	padding:1px 9px 1px 19px;
-	width:130px;
+	width:170px;
 }
 .dijitMenuBar li ul li a:hover {
 	background:#fff;
@@ -48,21 +49,21 @@
 	color:#000;
 }
 
-.dijitMenuBar ul li.selected a {
+#menu .selected a {
 	background:#666;
 	color:#fff;
 }
-.dijitMenuBar ul li.selected ul li a {
+#menu ul li.selected ul li a {
 	background:#fff;
 	color:#666;
 }
-.dijitMenuBar ul li.selected ul li a:hover {
-	color:#000;
-	background:#666;
+#menu ul li.selected ul li a:hover {
+	color:#fff;
+	background:#205bd4;
 }
 
 .dijitMenuBar li ul ul {
-	margin: -1.9em 0 0 158px;
+	margin: -1.9em 0 0 198px;
 }
 
 .dijitMenuBar .dijitHotKey {

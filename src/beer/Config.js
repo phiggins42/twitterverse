@@ -12,7 +12,7 @@ dojo.declare("beer.Config", dijit._Widget, {
 	_apply: function(e){
 		e && e.preventDefault();
 		
-		var data = dojo.formToObject(this.formNode);		
+		var data = dojo.formToObject(this.formNode);
 		console.log("applying changes", data);
 		
 	}

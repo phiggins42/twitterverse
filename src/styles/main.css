@@ -1,5 +1,5 @@
 /* external resources */
-@import "menu.css";
+@import "menu.css"; 
 
 /* Generic Styles */
 body, html {
@@ -22,7 +22,7 @@ h1, h2 {
 }
 
 #search { 
-	float:left;
+	float:right;
 	margin:5px 20px 0 50px;
 }
 
@@ -58,6 +58,7 @@ h1, h2 {
 	clear:both;
 	padding:4px;
 	margin-left:6px;
+	border-bottom:1px solid #dedede;
 }
 
 /*
@@ -75,7 +76,7 @@ h1, h2 {
 */
 
 #menu a {
-	color:#000;
+	color:#666;
 	text-decoration:none;
 }
 

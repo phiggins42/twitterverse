@@ -9,9 +9,6 @@ dojo.require("dojo.NodeList-fx");
 	
 	// global variables
 	var	urlbase = "http://search.twitter.com/search.json", 
-
-		// global callback counter
-		count = 0,
 		
 		// matches http:// stuff
 		urlRe = new RegExp("([A-Za-z]+://[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+)","g"),
@@ -401,7 +398,7 @@ dojo.require("dojo.NodeList-fx");
 				return; // no duplicates please.
 			}
 			this._seenIds[data.id] = true; 
-			console.log(data);
+
 			// so not sure this is the right way to do this:
 			// encode the retweet and reply strings now:
 			var t = "http://twitter.com/home?status=";
@@ -465,7 +462,7 @@ dojo.require("dojo.NodeList-fx");
 			this._baseInterval = this.interval;
 			
 			if(!cachedPublicTemplate){
-				dojo.xhrGet({
+				d.xhrGet({
 					url: d.moduleUrl("beer", "templates/PublicItemTemplate.html"),
 					load: d.hitch(this, function(data){
 						cachedPublicTemplate = this.itemTemplate = d.trim(data);

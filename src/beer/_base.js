@@ -3,16 +3,18 @@
 dojo.provide("beer._base"); // alert the build to our presence
 
 // load our plugins:
-dojo.require("dojo.cookie");
+dojo.require("plugd.base"); // see beer.profile.js for how plugd is configured
 dojo.require("plugd.trigger");
 dojo.require("plugd.base"); // fun code
 dojo.require("plugd.script"); // more fun
+
 dojo.require("dojox.analytics.Urchin");
 
 // load our module code
 dojo.require("beer.Search"); // our SearchBoxThinger
 dojo.require("beer.Config"); // our config singleton
 dojo.require("beer.menu");
+dojo.require("beer.sets");
 
 dojo.mixin(beer, {
 	
@@ -40,50 +42,6 @@ dojo.mixin(beer, {
 			return w.declaredClass == "beer.SearchTwitter" 
 				|| w.declaredClass == "beer.PublicStream"
 		});
-	},
-	
-	addSet: function(e){
-		// summary: // only in dojo trunk, this is all false otherwise add the current selected view as a cookie
-		e && e.preventDefault(); // safey first
-		var state = this._getSearches().map(function(w){
-			return dojo.objectToQuery({
-				q: w.query, a: w.auth, id: w.maxId
-			})
-		});
-
-		console.log('should set cookie for:', state);
-		var setname = state.length ? prompt("Name this set:") : false;
-		var sets = [];
-
-		if(setname && dojo.indexOf(sets, setname) < 0){
-			beer._addSetName(setname, state);
-		}else{
-			dojo.publish("/system/warning", ["Need to select a unique name for your set"]);
-		}
-	},
-	
-	_addSetName: function(name, state){
-		var sets = dojo.queryToObejec(dojo.cookie("tvsets"));
-		var obj = {};
-		obj[name] = state;
-		dojo.cookie("tvsets", dojo.mixin(sets||{}, obj));
-	},
-	
-	loadSets: function(){
-		// load all the sets stored in a cookie (possibly unset) into the 'sets' ul
-		// listen for onlick on the ul, and add a set of searches based on the cookie data
-		var sets = dojo.cookie("tvsets");
-		if(sets){
-			console.log(sets);
-		}
-	},
-	
-	_loadSet: function(byName){
-		var setdata = dojo.cookie("tvsets");
-		if(setData[byName]){
-			console.log(setData[byName]);
-		}
-		// hmmmmmmm
 	},
 	
 	_inputListener: function(e){
@@ -171,8 +129,7 @@ dojo.mixin(beer, {
 	initMenu: function(){
 		// handle all the menu stuff. perhaps move into menu.js by itself
 		
-		this.trendNode = dojo.query(dojo.create("ul"))
-			.place("#trendingMenu", "after")
+		this.trendNode = dojo.query("#trendingMenu + ul")
 			.onclick(this, function(e){
 				e.preventDefault();
 				this._addQuery(e.target.innerHTML);
@@ -180,7 +137,9 @@ dojo.mixin(beer, {
 		;
 		
 		this.loadTrends();
-		this.loadSets();
+
+		// init the set manager:
+		beer.sets.init();;
 		
 		// setup the behavior
 		dojo.query("#menu").menu();
@@ -188,9 +147,9 @@ dojo.mixin(beer, {
 		// wire up known clicks, grab trends
 		// wireup up the 'mark all read' link
 
-		dojo.query("#markall").onclick(this, function(e){
+		dojo.query("#markall").onclick(function(e){
 			e.preventDefault();
-			this._getSearches().forEach(function(w){
+			beer._getSearches().forEach(function(w){
 				// yay plugd, no need to dig up which function is reacting to
 				// onclick, just trigger a fake event from the widget node
 				// FIXME: should move to w.markAsRead() or similar
@@ -199,7 +158,7 @@ dojo.mixin(beer, {
 		});
 
 		// wire up the 'save set' link
-		dojo.query("#saveset").onclick(this, "addSet");
+		dojo.query("#saveset").onclick(beer.sets, "add");
 				
 	},
 	
@@ -235,7 +194,7 @@ dojo.mixin(beer, {
 			})
 		);
 		
-	},
+	}
 	
 	// hack: experimental moveable
 	
