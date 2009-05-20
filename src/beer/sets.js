@@ -20,9 +20,9 @@ dojo.require("dojo.cookie");
 
 			var setname = state.length ? prompt("Name this set:") : false;
 
-			if(setname && !sets[setname]){
+			if(setname && !currentsets[setname]){
 				currentsets[setname] = state;
-				d.cookie("tvsets", dojo.toJson(sets));
+				d.cookie("tvsets", dojo.toJson(currentsets));
 				this._addMenuItem(setname);
 			}else{
 				d.publish("/system/warning", ["Need to select a unique name for your set"]);
@@ -30,6 +30,8 @@ dojo.require("dojo.cookie");
 		},
 
 		_addMenuItem: function(setName){
+			// create two nodes and attach onclicks. on loads, one removed both nodes
+			
 			var n = dojo.place("<li><a href='#'>" + setName + "</a></li>", this.setsNode, "first");
 			d.connect(n, "onclick", d.hitch(this, "_loadSet", setName));
 			
