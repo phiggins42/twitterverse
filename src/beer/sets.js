@@ -5,7 +5,7 @@ dojo.require("dojo.cookie");
 
 (function(d){ 
 
-	var sets = {};
+	var currentsets = {};
 
 	d.mixin(beer.sets, {
 		
@@ -21,7 +21,7 @@ dojo.require("dojo.cookie");
 			var setname = state.length ? prompt("Name this set:") : false;
 
 			if(setname && !sets[setname]){
-				sets[setname] = state;
+				currentsets[setname] = state;
 				d.cookie("tvsets", dojo.toJson(sets));
 				this._addMenuItem(setname);
 			}else{
@@ -62,7 +62,7 @@ dojo.require("dojo.cookie");
 					if(!beer._getSearches().some(function(w){
 						return w.query == item.q;
 					})){
-						console.log(item.q);
+						// console.log(item.q);
 						// add it, base on auth
 						new beer[(item.a ? 
 							"PublicStream" : "SearchTwitter"
@@ -89,8 +89,8 @@ dojo.require("dojo.cookie");
 			return d.fromJson(d.cookie("tvsets"));
 		},
 		_set: function(setdata){
-			sets = setdata;
-			return d.cookie("tvsets", d.toJson(sets));
+			currentsets = setdata;
+			return d.cookie("tvsets", d.toJson(setdata));
 		},
 		
 		//>>excludeStart("debug", kwArgs.stripConsole);
@@ -111,7 +111,7 @@ dojo.require("dojo.cookie");
 				|| d.place("<ul></ul>", "clearMenu", "after")
 			;
 
-			var info = sets = this._get();
+			var info = currentsets = this._get();
 			if(info){
 				// console.log("present:", info);
 				for(var i in info){
