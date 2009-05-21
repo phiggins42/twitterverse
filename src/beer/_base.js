@@ -137,28 +137,26 @@ dojo.mixin(beer, {
 			})
 		;
 		
+		// populate the trends menu
 		this.loadTrends();
 
 		// init the set manager:
 		beer.sets.init();
 		
-		// setup the behavior
+		// setup the behavior for the menu:
 		dojo.query("#menu").menu();
 		
 		// wire up known clicks, grab trends
 		// wireup up the 'mark all read' link
-
 		dojo.query("#markall").onclick(function(e){
 			e.preventDefault();
 			beer._getSearches().forEach(function(w){
-				// yay plugd, no need to dig up which function is reacting to
-				// onclick, just trigger a fake event from the widget node
-				// FIXME: should move to w.markAsRead() or similar
-				dojo.trigger(w.domNode, "onclick");
+				// tell each widget in this list to update themselves.
+				w._markRead();
 			});
 		});
 
-		// wire up the 'save set' link
+		// wire up the 'save set' link. execute beer.sets.add() in beer.sets context
 		dojo.query("#saveset").onclick(beer.sets, "add");
 		
 	},
@@ -169,20 +167,22 @@ dojo.mixin(beer, {
 		dojo.addScript(
 			"http://search.twitter.com/trends/current.json?callback=?", 
 			dojo.hitch(this, function(response){
+				// clear the ul of items
 				this.trendNode.empty();
+				// ugh: twitter returns the trends as an object with non-zulu times
+				// as keys. but only one in our case, forin that bitch.
 				for(var i in response.trends){
+					// yay, our one object is an array:
 					dojo.forEach(response.trends[i], function(trend){
+						// make a li for this trend, the click for him is delegated:
 						dojo.place("<li><a href='#' rel='" + trend.query + "'>" + trend.name + "</a></li>", this.trendNode[0]);
 					}, this);
 				}
 				
 			})
-		);
-		
+		);		
 	}
-	
-	// hack: experimental moveable
-	
+
 });
 
 // start the whole thing

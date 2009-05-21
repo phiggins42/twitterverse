@@ -6,37 +6,53 @@ dojo.require("plugd.base");
 
 ;(function(d){ 
 
+	// a cache of our sets per page load, saved from cookie, etc
 	var currentsets = {};
 
 	d.mixin(beer.sets, {
 		
 		add: function(e){
-			// summary: // only in dojo trunk, this is all false otherwise add the current selected view as a cookie
+			// summary: 
+			//		Add the current 'view' as a set.
+			
 			e && e.preventDefault(); // safey first
+			
 			var state = beer._getSearches().map(function(w){
+				// return a array of objects describing the
+				// current 'state'
 				return {
 					q: w.query, a: w.auth ? 1 : 0
 				}
 			});
 
+			// prompt the user for a name to save this 'state' as:
 			var setname = state.length ? prompt("Name this set:") : false;
 
+			// FIXME: make more robust. overwriting of states should be OK, etc.
 			if(setname && !currentsets[setname]){
+				// save the state as a set:
 				currentsets[setname] = state;
 				this._set(currentsets);
 				this._addMenuItem(setname);
 			}else{
+				// tell someone maybe listening something went wrong.
 				d.publish("/system/warning", ["Need to select a unique name for your set"]);
 			}
 		},
 
 		_addMenuItem: function(setName){
-			// create two nodes and attach onclicks. on loads, one removed both nodes
+			// summary:
+			//		create two nodes and attach onclicks. one loads, one removed both nodes
 			
+			// create a menu item for loading a set:
 			var n = dojo.place("<li><a href='#'>" + setName + "</a></li>", this.setsNode, "first");
 			d.connect(n, "onclick", d.hitch(this, "_loadSet", setName));
 			
+			// create a menu item for clearing the set by name
+			// FIXME: UX issue, set management should be easier.
 			var rn = dojo.place(dojo.clone(n), this.clearSetsNode, "first");
+			// passing both node references to _removeSet so it deletes them both,
+			// but the UX is wrong. see `_removeSet`
 			d.connect(rn, "onclick", d.hitch(this, "_removeSet", setName, [n, rn]));
 		},
 
@@ -47,6 +63,8 @@ dojo.require("plugd.base");
 			
 			if(setdata){
 				
+				// make an array of the current queries on the page to compare against
+				// our incoming intended set
 				var setqueries = d.map(setdata, function(aset){
 					return aset.q
 				});
@@ -54,7 +72,9 @@ dojo.require("plugd.base");
 				// close the open searches that are not in this upcoming set
 				var gone = beer._getSearches().filter(function(w){
 					return d.indexOf(setqueries, w.query) < 0;
-				}).forEach(function(w){ 
+				}).forEach(function(w){
+					// FIXME: WidgetSet array functions could support dojo's
+					// fun version of .forEach("item._onclose()")
 					w._onclose(); 
 				});
 
@@ -65,8 +85,7 @@ dojo.require("plugd.base");
 					if(!beer._getSearches().some(function(w){
 						return w.query == item.q;
 					})){
-						// console.log(item.q);
-						// add it, base on auth
+						// add it, based on auth flag in the set
 						new beer[(item.a ? 
 							"PublicStream" : "SearchTwitter"
 						)]({
@@ -78,16 +97,21 @@ dojo.require("plugd.base");
 		},
 		
 		_removeSet: function(byName, nodes, e){
+			// summary:
+			//		Remove this set byName, deleting menu items
+			//		and updating the sets cookies along the way.
+			
 			e && d.stopEvent(e);
 			var setdata = this._get();
 			if(setdata && setdata[byName]){
 				delete setdata[byName];
 				this._set(setdata);
+				// FIXME: when we fix the UX of clear set menu, this should go away:
 				d.forEach(nodes || [], d.destroy, d);
 			}
 		},
 		
-		// basic shorthand for tvsets cookie
+		// basic shorthand for tvsets cookie setting/getting. 
 		_get: function(){
 			return d.fromJson(d.cookie("tvsets"));
 		},
@@ -105,12 +129,14 @@ dojo.require("plugd.base");
 		
 		init: function(){
 
+			// use or create an unordered-list for our menu() for the sets
 			this.setsNode = d.query("#setsMenu + ul")[0] 
 				|| d.place("<ul></ul>", "setsMenu", "after")
 			;
 			
 			// I don't like that i'm making a default UL here. but menu.js wants
-			// it initially as it's not using dojo.behavior
+			// it initially as it's not using dojo.behavior. same as above, use
+			// or create an ul to clear the set
 			this.clearSetsNode = d.query("#clearMenu + ul")[0] 
 				|| d.place("<ul></ul>", "clearMenu", "after")
 			;
@@ -118,10 +144,9 @@ dojo.require("plugd.base");
 			var info = this._get();
 			if(info){
 				currentsets = info;
-				// console.log("present:", info);
-				for(var i in info){
-					this._addMenuItem(i);
-				}
+				d.forIn(info, function(_, k){
+					this._addMenuItem(k);
+				}, this);
 			}
 		}
 		
