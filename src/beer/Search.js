@@ -28,6 +28,9 @@ dojo.require("dojo.NodeList-fx");
 	
 	// exposed so can be used in the formatter function dojo.string.substitute
 	beer.replaceLinks = function(str){
+		// FIXME: break this into some kind of filtering() API, a pre and post-process
+		// of tweet data which allows for all these replacements optionally. also,
+		// I am no good with js regexp. I promise. 
 		return str
 			// replace direct url's in the tweet
 			.replace(urlRe, function(m){
@@ -35,10 +38,20 @@ dojo.require("dojo.NodeList-fx");
 				var ms = m.length > 20 ? m.slice(0, 17) + "..." : m;
 				return "<a href='" + m + "' title='" + m + "' target='_blank'>" + ms + "</a>";
 			})
+			
 			// and replace the @replies and references with links
 			.replace(/@([\w]+)/g, function(_, m){
 				return "<a href='http://twitter.com/" + m + "'>@" + m + "</a>";
 			})
+
+			// basic wiki syntax stuff. probably a better way.
+			.replace(/\s*_([\w]+)_\s*/g, function(_, m){
+				return " <em>" + m + "</em> ";
+			})
+			.replace(/\s*\*([\w]+)\*\s*/g, function(_, m){
+				return " <strong>" + m + "</strong> ";
+			})
+			
 		;
 	};
 
@@ -203,7 +216,7 @@ dojo.require("dojo.NodeList-fx");
 				this.interval = this._baseInterval;
 			}
 			// update the new maxid
-			this.maxId = response.max_id;
+			this.maxId = Math.max(this.maxId, response.max_id);
 			
 			// they come in backwards?
 			response.results.reverse();
@@ -216,6 +229,8 @@ dojo.require("dojo.NodeList-fx");
 			}else{
 				// we have new results, add each of them:
 				
+				// FIXME: make this part of the pre-filtering API. RT removal should
+				// be optional and per instance. maybe just UI?
 				d.forEach(this.showRT ? 
 					// just pass the array
 					response.results : 
@@ -458,7 +473,7 @@ dojo.require("dojo.NodeList-fx");
 						duration:700, 
 						onEnd: function(){
 							setTimeout(function(){ all.pop(); }, 10);
-						} 
+						}
 					})
 				])
 			;
