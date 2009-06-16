@@ -2,6 +2,8 @@ dojo.provide("beer.menu");
 dojo.require("plugd.base");
 (function(d){
 	
+	// my janktastic plain UL menu thinger. stolen from plugd, but little to no modifications.
+	
 	d.extend(d.NodeList, {
 		menu: function(){
 			return this.forEach(function(n){

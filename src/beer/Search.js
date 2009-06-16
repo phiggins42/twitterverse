@@ -4,6 +4,7 @@ dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
 dojo.require("dojo.fx");
 dojo.require("dojo.NodeList-fx");
+dojo.require("beer.filters");
 
 (function(d){
 	
@@ -34,14 +35,16 @@ dojo.require("dojo.NodeList-fx");
 		return str
 			// replace direct url's in the tweet
 			.replace(urlRe, function(m){
-				// if longer than twenty, shorten.
-				var ms = m.length > 20 ? m.slice(0, 17) + "..." : m;
-				return "<a href='" + m + "' title='" + m + "' target='_blank'>" + ms + "</a>";
+				// if longer than twenty, shorten to twenty.
+				var ms = m.length > 20 ? m.slice(0, 17) + "..." : m,
+					link = "<a href='" + m + "' title='" + m + "' target='_blank'>" + ms + "</a>";
+				// doit.
+				return link;
 			})
 			
 			// and replace the @replies and references with links
 			.replace(/@([\w]+)/g, function(_, m){
-				return "<a href='http://twitter.com/" + m + "'>@" + m + "</a>";
+				return "<a href='http://twitter.com/" + m + "' target='_blank'>@" + m + "</a>";
 			})
 
 			// basic wiki syntax stuff. probably a better way.
@@ -96,6 +99,10 @@ dojo.require("dojo.NodeList-fx");
 		//		defaults to a falsy "0", and is populated after determining
 		//		the highest seen id.
 		maxId: 0,
+		
+		constructor: function(args){
+			this.filters = args.filters || ["RT", "OVERZEALOUS"] // "CUSTOM", "USERS"];
+		},
 		
 		postCreate: function(){
 
@@ -180,10 +187,10 @@ dojo.require("dojo.NodeList-fx");
 			this.stop();
 			d.animateProperty({ 
 				node: this.domNode,
-				properties:{
-					width:20, opacity:0
+				properties: {
+					width: 20, opacity: 0
 				},
-				duration:600,
+				duration: 600,
 				onEnd: d.hitch(this, function(){
 					this.destroy();
 					ping();
@@ -231,14 +238,7 @@ dojo.require("dojo.NodeList-fx");
 				
 				// FIXME: make this part of the pre-filtering API. RT removal should
 				// be optional and per instance. maybe just UI?
-				d.forEach(this.showRT ? 
-					// just pass the array
-					response.results : 
-					// else pass a filtered array omiting "RT" things 
-					d.filter(response.results, function(item){
-						return !(/^RT/.test(item.text));
-					}),
-				this._addItem, this);
+				d.forEach(this._runFilters(response.results), this._addItem, this);
 
 				// update the ui
 				this._addToCount(response.results.length);
@@ -350,6 +350,16 @@ dojo.require("dojo.NodeList-fx");
 		children: function(){
 			// summary: return the children in this instance
 			return d.query(this.childSelector, this.containerNode);
+		},
+				
+		_runFilters: function(ar){
+			// summary: Run through each of the registered filters for this instance
+			// 		removing anything that matches a criteria
+			return dojo.filter(ar, function(item){
+				return dojo.every(this.filters, function(filter){
+					return beer.filters[filter](item);
+				})
+			}, this);
 		}
 		
 	});
@@ -406,7 +416,7 @@ dojo.require("dojo.NodeList-fx");
 				this.poll();
 			}else{
 				// we have new results, add each of them:
-				d.forEach(response, this._addItem, this);
+				d.forEach(this._runFilters(response), this._addItem, this);
 
 				// update the ui
 				this._addToCount(response.length);

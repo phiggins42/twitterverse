@@ -79,7 +79,7 @@ dojo.mixin(beer, {
 		}); 
 
 		if(!exists){
-			// put all other special formatter selections here:
+			// put all other special formatter selections here for now:
 			var re = /public:(\w+)/;
 			if(re.test(term)){
 				// add a public timeline for a username:
