@@ -1,6 +1,10 @@
 /* external resources */
 @import "menu.css"; 
 
+/* need to reduce tundra.css to a single file required for operation of Dialog */
+@import "../dijit/themes/tundra/tundra.css";
+@import "../dojox/image/resources/Lightbox.css";
+
 /* Generic Styles */
 body, html {
 	font-family:"Lucida Grande","Trebuchet MS",Verdana,sans-serif;
@@ -154,7 +158,7 @@ div.results li.unseen {
 	background-color:#fffccc;
 }
 
-div.results li img {
+div.results li img.profile {
 	width:42px;
 	height:42px;
 	float:left;
@@ -239,4 +243,10 @@ a.retweeticon {
 }
 #config div {
 	padding:8px;
+}
+
+div.results li img.zoomicon {
+	width:13px;
+	height:13px;
+	cursor:pointer;
 }

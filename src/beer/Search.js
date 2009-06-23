@@ -5,6 +5,9 @@ dojo.require("dijit._Templated");
 dojo.require("dojo.fx");
 dojo.require("dojo.NodeList-fx");
 dojo.require("beer.filters");
+dojo.require("beer.process");
+dojo.require("beer.translate");
+dojo.require("dojo.cache");
 
 (function(d){
 	
@@ -37,8 +40,18 @@ dojo.require("beer.filters");
 			.replace(urlRe, function(m){
 				// if longer than twenty, shorten to twenty.
 				var ms = m.length > 20 ? m.slice(0, 17) + "..." : m,
-					link = "<a href='" + m + "' title='" + m + "' target='_blank'>" + ms + "</a>";
-				// doit.
+					link = "<a href='" + m + "' title='" + m + "' target='_blank'>" + ms + "</a>",
+					service = beer.process.getService(m),
+					api = beer.process.services[service]
+				;
+				
+				if(api){
+					var largest = api.full ? api.full(m) : api.thumb ? api.thumb(m) : api.mini ? api.mini(m) : false;
+					if(largest){
+						link += " <img class='zoomicon' src='src/styles/images/external.png' rel='" + largest +"'>"
+					}
+				}
+				
 				return link;
 			})
 			
@@ -79,7 +92,7 @@ dojo.require("beer.filters");
 		// itemTemplate: String
 		//		A template string to use for each Tweet-item. Filtered through dojo.string.substitute
 		//		with each tweet data item as the content.
-		itemTemplate:"", 
+		itemTemplate: dojo.cache("beer", "templates/ItemTemplate.html"), 
 
 		// showRT: Boolean
 		//		Filter out Tweets starting with "RT" if set false.
@@ -108,21 +121,10 @@ dojo.require("beer.filters");
 
 			this._query = encodeURIComponent(this.query);
 			this._baseInterval = this.interval;
-			
-			if(!cachedTemplate){
-				dojo.xhrGet({
-					url: d.moduleUrl("beer", "templates/ItemTemplate.html"),
-					load: d.hitch(this, function(data){
-						cachedTemplate = this.itemTemplate = d.trim(data);
-					}),
-					sync:true
-				});
-			}else{
-				this.itemTemplate = cachedTemplate;
-			}
 
 			this.poll();
 			this.update(); // always do it now
+			this.itemTemplate = dojo.trim(this.itemTemplate);
 			
 			this.connect(this.actions, "onclick", "_actions");
 			
@@ -304,6 +306,8 @@ dojo.require("beer.filters");
 			// setup some events for hoverstates:
 			d.query(n).hoverClass("over");
 			
+			this._checkTranslate(n, data);
+			
 			// animate the node in. We're keeping track of all relevant running animations so we 
 			// can be sure they aren't _all_ trying to wipein at once. This staggers them all,
 			// and pops itself off when complete to decrement the delay
@@ -323,6 +327,21 @@ dojo.require("beer.filters");
 			ping();
 			// play the animation
 			a.play(50 * all.length);
+		},
+		
+		_checkTranslate: function(n, data){
+			// summary: Determine if 'data' is a tweet item that needs translating. And handle it.
+			var lang = data.iso_language_code;
+			if(lang && lang !== beer.config.locale){ 
+				var target = d.query(".tweettext", n), text = target[0].innerHTML
+				beer.translate(text).addCallback(function(cbd){
+					// careful, this callback fails silently for some reason
+					if(cbd.responseData.translatedText){
+						target[0].innerHTML = cbd.responseData.translatedText + 
+							" - <em>[lang:" + cbd.responseData.detectedSourceLanguage + "]</em>";
+					}
+				});
+			}	
 		},
 		
 		_removeItem: function(n){

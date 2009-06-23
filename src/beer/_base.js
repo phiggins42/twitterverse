@@ -16,6 +16,11 @@ dojo.require("beer.sets");
 
 dojo.mixin(beer, {
 	
+	// FIXME: one day, I need to make some UI so these options are available
+	config: {
+		locale: "en"
+	},
+	
 	// bootstrap code:
 	init: function(){
 		
@@ -155,6 +160,8 @@ dojo.mixin(beer, {
 				w._markRead();
 			});
 		});
+		// reload the trends when we click on the top level trend menu
+		dojo.query("#trendingMenu").onclick(beer, "loadTrends");
 
 		// wire up the 'save set' link. execute beer.sets.add() in beer.sets context
 		dojo.query("#saveset").onclick(beer.sets, "add");
