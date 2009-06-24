@@ -23,18 +23,12 @@ dojo.require("dojo.cache");
 		// reuse ping() to notify UI of new items
 		ping = d.partial(d.publish, "/new/tweets", []),
 
-		// templates for Search and Public
-		cachedTemplate, 
-		cachedPublicTemplate,
-		
+		// create a big hash of id's we've seen, to eliminate duplicates
 		_seenIds = {}
 	;
 	
 	// exposed so can be used in the formatter function dojo.string.substitute
 	beer.replaceLinks = function(str){
-		// FIXME: break this into some kind of filtering() API, a pre and post-process
-		// of tweet data which allows for all these replacements optionally. also,
-		// I am no good with js regexp. I promise. 
 		return str
 			// replace direct url's in the tweet
 			.replace(urlRe, function(m){
@@ -92,7 +86,7 @@ dojo.require("dojo.cache");
 		// itemTemplate: String
 		//		A template string to use for each Tweet-item. Filtered through dojo.string.substitute
 		//		with each tweet data item as the content.
-		itemTemplate: dojo.cache("beer", "templates/ItemTemplate.html"), 
+		itemTemplate: dojo.trim(dojo.cache("beer", "templates/ItemTemplate.html")), 
 
 		// showRT: Boolean
 		//		Filter out Tweets starting with "RT" if set false.
@@ -124,7 +118,6 @@ dojo.require("dojo.cache");
 
 			this.poll();
 			this.update(); // always do it now
-			this.itemTemplate = dojo.trim(this.itemTemplate);
 			
 			this.connect(this.actions, "onclick", "_actions");
 			
@@ -212,10 +205,10 @@ dojo.require("dojo.cache");
 			].join("");
 			
 			// fetch:
-			dojo.addScript(url, d.hitch(this, "_handle"));
+			dojo.addScript(url, d.hitch(this, "_handle", true));
 		},
 		
-		_handle: function(response){
+		_handle: function(shift, response){
 			// summary: Handle the incoming data for this request.
 			
 			this._items = this.children();
@@ -227,10 +220,15 @@ dojo.require("dojo.cache");
 			// update the new maxid
 			this.maxId = Math.max(this.maxId, response.max_id);
 			
-			// they come in backwards?
-			response.results.reverse();
+			if(shift){
+				// for the public-timeline branch. data comes back as array of results[]
+				response = response.results;
+			}
 			
-			if(!response.results.length){
+			// they come in backwards?
+			response.reverse();
+			
+			if(!response.length){
 				// if no new results, bump the interval a bit to prevent overusing the API
 				this.stop();
 				this.interval *= 1.25;
@@ -240,10 +238,10 @@ dojo.require("dojo.cache");
 				
 				// FIXME: make this part of the pre-filtering API. RT removal should
 				// be optional and per instance. maybe just UI?
-				d.forEach(this._runFilters(response.results), this._addItem, this);
+				d.forEach(this._runFilters(response), this._addItem, this);
 
 				// update the ui
-				this._addToCount(response.results.length);
+				this._addToCount(response.length);
 				
 				// remove extra tweets. we only want 15. _removeItem will not remove .unseen items, no worries.
 				if(this._items.length){
@@ -288,6 +286,11 @@ dojo.require("dojo.cache");
 				].join("").replace(/\ /g, "+")
 
 			});
+		
+			this._createItemNode(data);
+		},
+		
+		_createItemNode: function(data){
 			
 			// create the markup from the itemTemplate and data
 			var n = d.place(
@@ -336,9 +339,11 @@ dojo.require("dojo.cache");
 				var target = d.query(".tweettext", n), text = target[0].innerHTML
 				beer.translate(text).addCallback(function(cbd){
 					// careful, this callback fails silently for some reason
-					if(cbd.responseData.translatedText){
-						target[0].innerHTML = cbd.responseData.translatedText + 
-							" - <em>[lang:" + cbd.responseData.detectedSourceLanguage + "]</em>";
+					var c = cbd && cbd.responseData;
+					// sometimes google thinks this language isn't what twitter said, trust google.
+					if(c.translatedText && c.detectedSourceLanguage !== beer.config.locale){
+						target[0].innerHTML = c.translatedText + 
+							" - <em>[lang:" + c.detectedSourceLanguage + "]</em>";
 					}
 				});
 			}	
@@ -393,7 +398,7 @@ dojo.require("dojo.cache");
 		// summary: a version of Search box that only handles a public_timeline for a username
 		// pass query:"username" to load twitter.com/username feed
 		
-		// FIXME: DRY, refactore update/handle/_addItem to handle schema/multiple templates
+		itemTemplate: dojo.trim(dojo.cache("beer.templates", "PublicItemTemplate.html")),
 		
 		update: function(){
 			// summary: Trigger a new fetch for more data.
@@ -410,45 +415,9 @@ dojo.require("dojo.cache");
 			].join("");
 			
 			// fetch:
-			dojo.addScript(url, d.hitch(this, "_handle"));
+			dojo.addScript(url, d.hitch(this, "_handle", false));
 		},
-		
-		_handle: function(response){
-			// summary: Handle the incoming data for this request.
 			
-			this._items = this.children();
-			
-			if(this.maxId && response.max_id > this.maxId){
-				// reset the timer is we've gotten a new item
-				this.interval = this._baseInterval;
-			}
-			// update the new maxid
-			this.maxId = response.max_id;
-			
-			// they come in backwards?
-			response.reverse();
-			
-			if(!response.length){
-				// if no new results, bump the interval a bit to prevent overusing the API
-				this.stop();
-				this.interval *= 1.25;
-				this.poll();
-			}else{
-				// we have new results, add each of them:
-				d.forEach(this._runFilters(response), this._addItem, this);
-
-				// update the ui
-				this._addToCount(response.length);
-				
-				// remove extra tweets. we only want 15. _removeItem will not remove .unseen items, no worries.
-				if(this._items.length){
-					this.children().splice(15).forEach(this._removeItem, this).length;
-				}
-			}
-			
-			ping();
-		},
-		
 		_addItem: function(data){
 			// summary: Create a new child from a dataitem returned in the response.results.
 			
@@ -474,69 +443,13 @@ dojo.require("dojo.cache");
 
 			});
 			
-			// create the markup from the itemTemplate and data
-			var n = d.place(
-				d.string.substitute(this.itemTemplate, data),
-			 	this.containerNode, 
-				"first"
-			);
-			
-			// prepare the node
-			d.style(n, {
-				opacity:0,
-				height:"0",
-				overflow:"hidden"
-			});
-			
-			// setup some events for hoverstates:
-			d.query(n).hoverClass("over");
-			
-			// animate the node in. We're keeping track of all relevant running animations so we 
-			// can be sure they aren't _all_ trying to wipein at once. This staggers them all,
-			// and pops itself off when complete to decrement the delay
-			var all = beer.SearchTwitter.anims,
-				a = d.fx.combine([
-					d.fx.wipeIn({ duration:500, node: n }),
-					d.fadeIn({ 
-						node: n, 
-						duration:700, 
-						onEnd: function(){
-							setTimeout(function(){ all.pop(); }, 10);
-						}
-					})
-				])
-			;
-
-			all.push(1);
-			
-			// play the animation, each staggered 50ms
-			a.play(50 * all.length);
+			this._createItemNode(data);
+		
 		},
 		
 		postCreate: function(){
-
+			this.inherited(arguments);
 			d.addClass(this.domNode, "public");
-
-			this._query = encodeURIComponent(this.query);
-			this._baseInterval = this.interval;
-			
-			if(!cachedPublicTemplate){
-				d.xhrGet({
-					url: d.moduleUrl("beer", "templates/PublicItemTemplate.html"),
-					load: d.hitch(this, function(data){
-						cachedPublicTemplate = this.itemTemplate = d.trim(data);
-					}),
-					sync:true
-				});
-			}else{
-				this.itemTemplate = cachedPublicTemplate;
-			}
-
-			this.poll();
-			this.update(); // always do it now
-			
-			this.connect(this.actions, "onclick", "_actions");
-			
 		}
 		
 	});
