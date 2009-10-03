@@ -1,5 +1,5 @@
 dojo.provide("beer.process");
-dojo.require("dojox.image.Lightbox");
+dojo.require("dojox.image.LightboxNano");
 
 // this file handles the behavior of links on the page pointing to a image/video service we know about
 
@@ -127,8 +127,7 @@ dojo.require("dojox.image.Lightbox");
 		dojo.addClass(dojo.body(), "tundra");
 		
 		// the popup to show. Not wanting to use LightboxDialog, need something lighter imo. 
-		var lb = new dojox.image.LightboxDialog();
-		lb.startup();
+		var lb = new dojox.image.LightboxNano();
 
 		// listen on window: pseudo-live(.zoomicon)
 		dojo.connect(dojo.doc, "onclick", function(e){
@@ -136,7 +135,7 @@ dojo.require("dojox.image.Lightbox");
 			if(t && dojo.hasClass(t, "zoomicon")){
 				dojo.style(t,"opacity","0.5"); // set itpartially hidden after first click
 				var link = dojo.attr(t, "rel");
-				link && lb.show({ href: link, title: link });
+				link && lb.show({ href: link, origin: e.target, title: link });
 			}
 		});
 		
