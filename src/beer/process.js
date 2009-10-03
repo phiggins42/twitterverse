@@ -135,7 +135,7 @@ dojo.require("dojox.image.LightboxNano");
 			if(t && dojo.hasClass(t, "zoomicon")){
 				dojo.style(t,"opacity","0.5"); // set itpartially hidden after first click
 				var link = dojo.attr(t, "rel");
-				link && lb.show({ href: link, origin: e.target, title: link });
+				link && lb.show({ href: link, origin: t, title: link });
 			}
 		});
 		
