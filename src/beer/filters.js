@@ -29,6 +29,11 @@ dojo.mixin(beer.filters, {
 	"OVERZEALOUS": function(item){
 		// nullify all "omgponies!!!" (any tweet with 3 or more consecutive !'s)
 		return !item.text.match(/!{3}/g);
+	},
+	
+	"TOPSHIT": function(item){
+		// filter out all "Top 10" tweets. 
+		return !item.text.match(/^top\ \d+/i)
 	}
 
 });
