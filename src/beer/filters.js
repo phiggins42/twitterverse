@@ -41,8 +41,8 @@ dojo.mixin(beer.filters, {
 	},
 	
 	"SUBTLEGRADIENT": function(item){
-	    // could probably be smarter. things like g[o]*?l and soccer and football
-	    return !item.text.match(/worldcup/gi);
+		// could probably be smarter. things like g[o]*?l and soccer and football
+		return !item.text.match(/worldcup/gi);
 	}
 
 });
