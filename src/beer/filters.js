@@ -34,6 +34,15 @@ dojo.mixin(beer.filters, {
 	"TOPSHIT": function(item){
 		// filter out all "Top 10" tweets. 
 		return !item.text.match(/^top\ \d+/i)
+	},
+	
+	"AUTOLOCATION": function(item){
+		return !item.text.match(/^i\'m\ at/i);
+	},
+	
+	"SUBTLEGRADIENT": function(item){
+	    // could probably be smarter. things like g[o]*?l and soccer and football
+	    return !item.text.match(/worldcup/gi);
 	}
 
 });
