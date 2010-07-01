@@ -41,8 +41,12 @@ dojo.mixin(beer.filters, {
 	},
 	
 	"SUBTLEGRADIENT": function(item){
-		// could probably be smarter. things like g[o]*?l and soccer and football
-		return !item.text.match(/worldcup/gi);
+		// courtesy this[key] ^^
+		return !item.text.match(/world\s*cup|GO+A?L|\bwatchin[g']\s|ESPN|red\s*card|^cheat(ed|ing)/ig);
+	},
+	
+	"IONLYCAREABOUTJS": function(item){
+		return item.text.match(/\.?J(ava)S(cript)/ig);
 	}
 
 });
