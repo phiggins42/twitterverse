@@ -47,6 +47,10 @@ dojo.mixin(beer.filters, {
 	
 	"IONLYCAREABOUTJS": function(item){
 		return item.text.match(/\.?J(ava)S(cript)/ig);
+	},
+	
+	"THOSEGUYS": function(item){
+		return !item.text.match(/@(cramforce|janl)/i);
 	}
 
 });
