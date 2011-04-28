@@ -172,7 +172,7 @@ dojo.mixin(beer, {
 		// summary: load the trends for the menu
 		
 		dojo.addScript(
-			"http://search.twitter.com/trends/current.json?callback=?", 
+			"http://api.twitter.com/1/trends/current.json?callback=?", 
 			dojo.hitch(this, function(response){
 				// clear the ul of items
 				this.trendNode.empty();
